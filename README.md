@@ -1,2 +1,5 @@
 # PiServ
-A server overview utility originally used for my raspberry pi, but can run on pertty much anything !
+
+## DEMO
+
+[![thumbnail](https://ibb.co/zTj0QfPJ)](https://youtu.be/Y_HVaCYVLIw)
