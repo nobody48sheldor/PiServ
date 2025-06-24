@@ -1,0 +1,29 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>{% block title %}PiServ{% endblock %}</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	</head>
+	<body>
+		<div id="top-bar">
+			<div class="push-left">
+				<button id="toggleDarkLight">
+					<i id="iconTheme" class="fa-regular fa-sun"></i>
+				</button>
+			</div>
+			<div class="push-center">
+					<p class="title">PiServ</p>
+			</div>
+			<div class="push-right">
+			</div>
+		</div>
+		<div id="page">
+			{% block page %}
+			{% endblock %}
+		</div>
+	<script src="{{ url_for('static', filename='script.js') }}"></script>
+	</body>
+</html>

@@ -1,0 +1,39 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+
+{% block title %}Home Page{% endblock %}
+
+{% block page%}
+<div id="top-left-pane">
+	<div class="title-pane">
+		<p class="title-pane-p">
+			Explore
+		</p>
+	</div>
+	<div id="explore">
+		{% include"explore.html" %}
+	</div>
+</div>
+<div id="bottom-left-pane">
+	<div class="title-pane">
+		<p class="title-pane-p">
+			Upload
+		</p>
+	</div>
+	<div id="upload">
+		{% include"upload.html" %}
+	</div>
+</div>
+<div id="right-pane">
+	<div class="title-pane">
+		<p class="title-pane-p">
+			My File
+		</p>
+	</div>
+	<div id="myFiles">
+		{% include"myFile.html" %}
+	</div>
+
+</div>
+{% endblock %}
