@@ -101,7 +101,6 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 function createDivElement(text) {
 	const divWrap = document.createElement("div");
 	const icon = document.createElement("i");
-	icon.className = "fa-solid";
 	icon.classList.add("icon");
 	divWrap.className = "divWrap";
 	const p = document.createElement("p");
@@ -111,21 +110,25 @@ function createDivElement(text) {
 	if (text.length < 30) {
 		if (last_chars !== text) {
 			p.textContent = text;
+			icon.className = "fa-regular";
 			icon.classList.add("fa-file");
 		if (text === "..") {
 			icon.classList.remove("fa-file");
 		}
 		} else {
 			p.textContent = text;
+			icon.className = "fa-solid";
 			icon.classList.add("fa-folder");
 		}
 	} else {
 		const text_cut = text.slice(0, 10)+"..."+text.slice(text.length-20, text.length);
 		if (last_chars !== text) {
 			p.textContent = text_cut;
+			icon.className = "fa-regular";
 			icon.classList.add("fa-file");
 		} else {
 			p.textContent = text_cut;
+			icon.className = "fa-solid";
 			icon.classList.add("fa-folder");
 		}
 	}
