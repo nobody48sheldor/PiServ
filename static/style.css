@@ -40,7 +40,7 @@ body {
 
 div#top-bar {
 	display: flex;
-	flex-direction: horizontal;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	height: 10%;
@@ -51,7 +51,7 @@ div#top-bar {
 
 div.push-left {
 	display: flex;
-	flex-direction: horizontal;
+	flex-direction: row;
 	align-items: center;
 	justify-content: left;
 	height: 100%;
@@ -62,7 +62,7 @@ div.push-left {
 
 div.push-center {
 	display: flex;
-	flex-direction: horizontal;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	height: 100%;
@@ -73,7 +73,7 @@ div.push-center {
 
 div.push-right {
 	display: flex;
-	flex-direction: horizontal;
+	flex-direction: row;
 	align-items: center;
 	justify-content: left;
 	height: 100%;
@@ -399,7 +399,7 @@ div#myFile-pane {
 
 div#myFile-pane div.iframeWrapper {
 	display: flex;
-	flex-direction: horizontal;
+	flex-direction: row;
 	justify-content: center;
 	width: 100%;
 }
@@ -432,4 +432,146 @@ div#myFile-pane div.actions button#downloadBtn {
 
 div#myFile-pane div.actions button#downloadBtn:hover {
 	box-shadow: 0 0 20px var(--primary-color);
+}
+
+div#upload {
+	transition: all 0.5s ease;
+	width: 90%;
+	margin-left: 5%;
+	height: 78%;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-gap: min(2vw, 2vh);
+}
+
+div#dropFiles-pane {
+	transition: all 0.5s ease;
+	grid-area: 1 / 1 / 2 / 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid var(--thirdary-color);
+	border-radius: 15px;
+	margin-top: 2%;
+}
+
+div#dropZone {
+	transition: all 0.5s ease;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div#dropFiles-pane i {
+	font-size: min(10vh,10vw);
+}
+
+div#searchFiles-pane {
+	transition: all 0.5s ease;
+	grid-area: 1 / 2 / 2 / 3;
+	display: flex;
+	justify-content: center;
+	border: 2px solid var(--thirdary-color);
+	border-radius: 15px;
+	margin-top: 2%;
+}
+
+div#results-pane-upload {
+	width: 100%;
+	transition: all 0.5s ease;
+	margin-top: 2%;
+	display: grid;
+	grid-template-columns: 50% 50%;
+
+}
+
+div#results-pane-upload div.left-pane-upload {
+	grid-area: 1 / 1 / 2 / 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+div#results-pane-upload div.left-pane-upload input {
+	margin-bottom: 10%;
+}
+
+div#results-pane-upload div.left-pane-upload div.actions-pane-upload {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+div#results-pane-upload div.left-pane-upload button#cancelBtn {
+	margin-right: 10%;
+	padding: 20%;
+	color: var(--primary-color-abs);
+	background-color: red;
+	border: None;
+	border-radius: 10px;
+	font-size: min(1.5vw, 1.5vh);
+	transition: all 0.5s ease;
+}
+
+div#results-pane-upload div.left-pane-upload button#cancelBtn:hover {
+	box-shadow: 0 0 20px var(--primary-color);
+}
+
+
+
+
+div#results-pane-upload div.left-pane-upload button#uploadBtn {
+	margin-right: 10%;
+	padding: 20%;
+	color: var(--primary-color-abs);
+	background-color: var(--secondary-color);
+	border: None;
+	border-radius: 10px;
+	font-size: min(1.5vw, 1.5vh);
+	transition: all 0.5s ease;
+}
+
+div#results-pane-upload div.left-pane-upload button#uploadBtn:hover {
+	box-shadow: 0 0 20px var(--primary-color);
+}
+
+div#results-pane-upload div.right-pane-upload {
+	grid-area: 1 / 2 / 2 / 3;
+}
+
+div#results-upload {
+	width: 90%;
+	transition: all 0.5s ease;
+	overflow: hidden;
+	display: grid;
+	grid-auto-rows: 5.5vh;
+	font-size: 50%;
+}
+
+div#results-upload p{
+	margin-left: min(1vh, 1vw);
+}
+
+div#page:has(#bottom-left-pane:hover) div#results-pane-upload div#results-upload {
+	transition: all 0.5s ease;
+	grid-auto-rows: 7vh;
+	font-size: 60%;
+}
+
+div#page:has(#top-left-pane:hover) div#results-pane-upload div#results-upload {
+	transition: all 0.5s ease;
+	grid-auto-rows: 4vh;
+	font-size: 50%;
+}
+
+.green {
+	color: green;
+}
+
+.defaultColor {
+	color: var(--text-color);
 }

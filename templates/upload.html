@@ -1,1 +1,27 @@
 <!-- templates/upload.html -->
+
+<div id="dropFiles-pane">
+	<div id="dropZone">
+		<div class="wrap">
+			<i id="iconDrop" class="fa-solid fa-cloud-arrow-up"></i>
+			<input type="file" id="fileInput" style="display:none;" />
+		</div>
+	</div>
+</div>
+
+<div id="searchFiles-pane">
+	<div id="results-pane-upload">
+		<div class="left-pane-upload">
+			<input type="text" id="search-upload" placeholder="Search for you files"></input>
+			<div class="actions-pane-upload">
+				<button id="cancelBtn">Cancel</button>
+				<button id="uploadBtn">Upload</button>
+			</div>
+		</div>
+		<div class="right-pane-upload">
+			<div id="results-upload"></div>
+		</div>
+	</div>
+</div>
+
+

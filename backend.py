@@ -6,6 +6,8 @@ from pygments import highlight
 from pygments.lexers import guess_lexer_for_filename, get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
+from werkzeug.utils import secure_filename
+import shutil
 
 
 load_dotenv("./.flaskenv")
@@ -18,12 +20,12 @@ chars_max = len(directory)+1 + 30
 
 Files=[]
 Folders=[]
-fileTypes = {"pdf":"","txt":"","png":"","jpg":"","jpeg":"","py":"","js":"","cpp":"","ml":"","htlm":"","css":"","scss":"","htmx":"","docx":"","odt":"","md":"","odg":"","tex":"","log":"","cmi":"","aux":"","c":"","cmo":"","svg":"","xlsx":"","sh":"","h":"","dat":"","gif":"","mp3":"","webp":"","mp4":"","mkv":"","MOV":"","webm":"","json":""}
+fileTypes = ["pdf","txt","png","jpg","jpeg","py","js","cpp","ml","htlm","css","scss","htmx","docx","odt","md","odg","tex","log","cmi","aux","c","cmo","svg","xlsx","sh","h","dat","gif","mp3","webp","mp4","mkv","MOV","webm","json"]
 print(fileTypes)
 def list_files_recursive(path):
     for entry in os.scandir(path):
         if entry.is_file():
-            if str(entry).split(".")[-1][:-2] in fileTypes.keys():
+            if str(entry).split(".")[-1][:-2] in fileTypes:
                 Files.append(str(entry.path))
         elif entry.is_dir():
             Folders.append(str(entry.path))
@@ -101,6 +103,55 @@ def download():
     path = request.args.get("q")
     return send_file(path, as_attachment=True)
 
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['file']
+    path = request.form.get('path')
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    filename = secure_filename(file.filename) # make the filename without weird characters
+    file.save(os.path.join(path, filename))
+    return jsonify({'success': True, 'filename': filename}), 200
+
+
+
+@app.route("/search-upload")
+def search_upload():
+    query = request.args.get("q", "").strip()
+    print(query)
+    if not query:
+        return jsonify([])
+
+    # Fuzzy match using difflib
+    #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
+    #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
+    matches = [match[0] for match in process.extract(query, Folders, limit=4, score_cutoff=10)]
+    return jsonify(matches)
+
+
+@app.route('/moveOrDeletFiles', methods=['POST'])
+def moveOrDeletFile():
+    data = request.get_json()
+    if not data:
+            return jsonify({'result': 0})
+    else:
+        if (data["deletFile"] == 1):
+            print("here trying to delet file")
+            os.remove("/home/arnaud/Desktop/arnaud/code/web/PiServ/temp/"+data["upload_file"])
+            return jsonify({'result': 1})
+        if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
+            shutil.move("/home/arnaud/Desktop/arnaud/code/web/PiServ/temp/"+data["upload_file"], data["upload_path"])
+            
+            list_files_recursive(directory)
+            return jsonify({'result': 1})
+        else:
+            return jsonify({'result': 0})
+    
 
 if __name__ == "__main__":
 	app.run(debug=True)

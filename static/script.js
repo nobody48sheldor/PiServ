@@ -6,6 +6,13 @@ const viewer = document.getElementById("viewer");
 const downloadBtn = document.getElementById("downloadBtn");
 const toggleDarkLight = document.getElementById("toggleDarkLight");
 const iconTheme = document.getElementById("iconTheme");
+const dropZone = document.getElementById("dropZone");
+const iconDrop = document.getElementById("iconDrop");
+const fileInput = document.getElementById('fileInput');
+const inputUpload = document.getElementById("search-upload");
+const resultsUpload = document.getElementById("results-upload");
+const uploadBtn = document.getElementById("uploadBtn");
+const cancelBtn = document.getElementById("cancelBtn");
 
 const colors = {
   dark: {
@@ -30,6 +37,8 @@ const colors = {
 
 let theme = "dark";
 let currentViewedPath = null;
+let upload_file = null;
+let upload_path = null;
 
 
 // Helper to check if path is a file
@@ -73,7 +82,6 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 						viewer.src = `/viewfile?q=${encodeURIComponent(fullPath)}`;
 						currentViewedPath = fullPath;
 					} else {
-						console.log(name);
 						if (name === "..") {
 							if (basePath === "/") {
 								displayDirectoryContents(ls, basePath+"/", ls2);
@@ -106,7 +114,6 @@ function createDivElement(text) {
 	const p = document.createElement("p");
 	const parts = text.split(".");
 	const last_chars = parts[parts.length - 1];
-	console.log("last chars : ", last_chars, " of ", text)
 	if (text.length < 30) {
 		if (last_chars !== text) {
 			p.textContent = text;
@@ -154,13 +161,72 @@ function handleSearchResults(data) {
 	});
 }
 
+function handleSearchResults_upload(data) {
+	resultsUpload.innerHTML = "";
+	data.forEach(item => {
+		const displayText = item.slice(item.length - 32 - Math.min(25, item.length - 32));
+		const divWrap = createDivElement(displayText);
+		resultsUpload.appendChild(divWrap);
+		divWrap.addEventListener("click", () => {
+			upload_path = item+"/";
+			for (const child of resultsUpload.children) {
+				child.classList.remove('green');
+			}
+			divWrap.classList.add("green");
+		});
+	});
+}
+
+
+function uploadFile(file) {
+	const formData = new FormData();
+	formData.append("file", file);
+	const path_temp = "/home/arnaud/Desktop/arnaud/code/web/PiServ/temp/";
+	formData.append("path", path_temp);
+
+	upload_file = file.name;
+
+	fetch('/upload', {
+		method: 'POST',
+		body: formData
+	})
+		.then(res => res.json())
+		.then(data => {
+			if (data.success) {
+				viewer.src = `/viewfile?q=${encodeURIComponent(path_temp+file.name)}`;
+				currentViewedPath = null;
+				// currentViewedPath = path_temp+file.name;
+			} else {
+				alert("Error: " + data.error);
+			}
+		})
+		.catch(err => alert("Upload failed: " + err));
+}
+
+
+
 // Handle input events
 input.addEventListener("input", () => {
 	const query = input.value;
+	if (query === "") {
+		ls.innerHTML = "";
+		ls2.innerHTML = "";
+		results.innerHTML = "";
+	} else {
 	fetch(`/search?q=${encodeURIComponent(query)}`)
 		.then(res => res.json())
 		.then(handleSearchResults);
+	}
 });
+
+inputUpload.addEventListener("input", () => {
+	const query = inputUpload.value;
+	fetch(`/search-upload?q=${encodeURIComponent(query)}`)
+		.then(res => res.json())
+		.then(handleSearchResults_upload);
+});
+
+
 
 downloadBtn.addEventListener("click", () => {
 	if (currentViewedPath) {
@@ -183,3 +249,90 @@ toggleDarkLight.addEventListener("click", () => {
 
   theme = theme === "light" ? "dark" : "light";
 });
+
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+dropZone.addEventListener("dragover", (e) => {
+	e.preventDefault();
+	iconDrop.classList.add("fa-file-import");
+	iconDrop.classList.remove("fa-cloud-arrow-up");
+});
+
+dropZone.addEventListener("dragleave", (e) => {
+	e.preventDefault();
+	iconDrop.classList.remove("fa-file-import");
+	iconDrop.classList.add("fa-cloud-arrow-up");
+});
+
+dropZone.addEventListener('drop', (e) => {
+	e.preventDefault();
+	iconDrop.classList.remove("fa-file-import");
+	iconDrop.classList.add("fa-cloud-arrow-up");
+	const file = e.dataTransfer.files[0];
+	if (file) uploadFile(file);
+});
+
+fileInput.addEventListener('change', () => {
+	const file = fileInput.files[0];
+	if (file) uploadFile(file);
+});
+
+cancelBtn.addEventListener('click', async () => {
+	for (const child of resultsUpload.children) {
+		child.classList.remove('green');
+	}
+	if (currentViewedPath === null) {
+		viewer.src = "";
+	}
+	const deletFile = 1;
+	if ( upload_file !== null ) {
+		const response = await fetch('/moveOrDeletFiles', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ upload_path, upload_file, deletFile })
+		});
+		const resultResponse = await response.json();
+		if ( resultResponse.result === 1) {
+			alert("upload cancelled");
+		} else { 
+			alert("Error : " + response.error);
+		}
+	}
+	upload_path = null;
+	upload_file = null;
+
+});
+
+uploadBtn.addEventListener('click', async () => {
+	for (const child of resultsUpload.children) {
+		child.classList.remove('green');
+	}
+	if (currentViewedPath === null) {
+		viewer.src = "";
+	}
+	const deletFile = false;
+	if ( (upload_path !== null) && (upload_file !== null)) {
+		const response = await fetch('/moveOrDeletFiles', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ upload_path, upload_file, deletFile })
+		});
+		const resultResponse = await response.json();
+		if ( resultResponse.result === 1) {
+			console.log( resultResponse.result );
+			alert("Success uploading : " + upload_file + " to " + upload_path);
+		} else { 
+			alert("Error : " + response.error);
+		}
+	} else {
+		alert("Error : missing an upload path or file");
+	}
+	upload_path = null;
+	upload_file = null;
+
+});
+
+
+
+
