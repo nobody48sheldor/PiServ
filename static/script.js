@@ -2,6 +2,7 @@ const input = document.getElementById("search");
 const results = document.getElementById("results");
 const ls = document.getElementById("ls");
 const ls2 = document.getElementById("ls2");
+const ls2title = document.getElementById("ls2title");
 const viewer = document.getElementById("viewer");
 const downloadBtn = document.getElementById("downloadBtn");
 const toggleDarkLight = document.getElementById("toggleDarkLight");
@@ -102,6 +103,16 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 					}
 				});
 			});
+			if (container === ls2) {
+				ls2title.innerHTML = "";
+				ls2title.classList.remove("hidden");
+				ls2title.classList.add("ls2title");
+				const titleDir = document.createElement("p");
+				titleDir.className = "titleDir";
+				titleDir.textContent = data[0].split("/")[data[0].split("/").length - 1];
+				ls2title.appendChild(titleDir)
+			}
+
 		});
 }
 
@@ -157,6 +168,9 @@ function handleSearchResults(data) {
 			currentViewedPath = item;
 			displayDirectoryContents(ls, item, ls2);
 			ls2.innerHTML="";
+			ls2title.innerHTML="";
+			ls2title.classList.add("hidden");
+			ls2title.classList.remove("ls2title");
 		});
 	});
 }
@@ -211,6 +225,9 @@ input.addEventListener("input", () => {
 	if (query === "") {
 		ls.innerHTML = "";
 		ls2.innerHTML = "";
+		ls2title.innerHTML = "";
+		ls2title.classList.add("hidden");
+		ls2title.classList.remove("ls2title");
 		results.innerHTML = "";
 	} else {
 	fetch(`/search?q=${encodeURIComponent(query)}`)
