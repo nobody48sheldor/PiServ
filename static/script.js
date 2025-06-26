@@ -40,6 +40,7 @@ let theme = "dark";
 let currentViewedPath = null;
 let upload_file = null;
 let upload_path = null;
+let path_temp = null;
 
 
 // Helper to check if path is a file
@@ -64,6 +65,41 @@ function getParentPath(fullPath) {
 	// Special case: root (empty parts gives [''], so we return "/")
 	return parts.length === 0 || (parts.length === 1 && parts[0] === "") ? "/" : parts.join('/');
 }
+
+async function getAbsolutePathFromBackend(relativePath) {
+	  try {
+		      const response = await fetch("/get-abs-path", {
+			            method: "POST",
+			            headers: {
+					            "Content-Type": "application/json"
+					          },
+			            body: JSON.stringify({ relpath: relativePath })
+			          });
+
+		      if (!response.ok) {
+			            throw new Error("Failed to fetch absolute path");
+			          }
+
+		      const data = await response.json();
+		      return data.absolutepath;
+		    } catch (error) {
+			        console.error("Error getting absolute path:", error);
+			        return null;
+			      }
+}
+
+
+getAbsolutePathFromBackend("static/temp/")
+	.then(absPath => {
+	if (absPath) {
+		console.log("Absolute path from server:", absPath);
+		path_temp= absPath+"/";
+	} else {
+		console.log("No path returned");
+	}
+});
+
+
 
 // Load and display files in a directory
 function displayDirectoryContents(container, path, targetContainer = null) {
@@ -195,7 +231,6 @@ function handleSearchResults_upload(data) {
 function uploadFile(file) {
 	const formData = new FormData();
 	formData.append("file", file);
-	const path_temp = "/home/arnaud/Desktop/arnaud/code/web/PiServ/temp/";
 	formData.append("path", path_temp);
 
 	upload_file = file.name;

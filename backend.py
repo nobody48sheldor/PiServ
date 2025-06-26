@@ -16,6 +16,7 @@ app = Flask(__name__)
 directory="/home/arnaud/Desktop/"
 chars_len = len(directory)+1
 chars_max = len(directory)+1 + 30
+print(os.path.abspath("static/temp/"))
 
 
 Files=[]
@@ -142,16 +143,28 @@ def moveOrDeletFile():
     else:
         if (data["deletFile"] == 1):
             print("here trying to delet file")
-            os.remove("/home/arnaud/Desktop/arnaud/code/web/PiServ/temp/"+data["upload_file"])
+            os.remove(os.path.abspath("static/temp/")+"/"+data["upload_file"])
             return jsonify({'result': 1})
         if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
-            shutil.move("/home/arnaud/Desktop/arnaud/code/web/PiServ/temp/"+data["upload_file"], data["upload_path"])
+            shutil.move(os.path.abspath("static/temp/")+"/"+data["upload_file"], data["upload_path"])
             
             list_files_recursive(directory)
             return jsonify({'result': 1})
         else:
             return jsonify({'result': 0})
-    
+
+
+@app.route('/get-abs-path', methods=['POST'])
+def get_abs_path():
+    data = request.get_json()
+    rel_path = data.get('relpath')
+
+    if not rel_path:
+        return jsonify({"error": "Missing path"}), 400
+
+    abs_path = os.path.abspath(rel_path)
+    return jsonify({"absolutepath": abs_path})
+
 
 if __name__ == "__main__":
 	app.run(debug=True)
