@@ -83,6 +83,8 @@ div.push-right {
 }
 
 button#toggleDarkLight {
+	transition: all 0.5s ease;
+	margin-right: 0.5vw;
 	color: var(--text-color);
 	background-color: #00000000;
 	border: None;
@@ -93,6 +95,22 @@ button#toggleDarkLight:hover {
 	color: var(--primary-color-abs);
 	text-shadow: 0 0 20px var(--primary-color);
 }
+
+button#powerUserMode {
+	transition: all 0.5s ease;
+	margin-left: 0.5vw;
+	color: var(--text-color);
+	background-color: #00000000;
+	border: None;
+	font-size: 200%;
+}
+
+button#powerUserMode:hover {
+	color: var(--primary-color-abs);
+	text-shadow: 0 0 20px var(--primary-color);
+}
+
+
 
 p.title {
 	font-size: 5vh;
@@ -448,18 +466,23 @@ div#myFile-pane div.actions {
 }
 
 div#myFile-pane div.actions button#downloadBtn {
-	padding: min(2vw, 2vh);
+	width: 5.5vw;
+	padding: 1vw;
 	color: var(--primary-color-abs);
 	background-color: #00000000;
 	background-color: var(--secondary-color);
 	border: None;
 	border-radius: 10px;
-	font-size: min(1.5vw, 1.5vh);
+	font-size: 0.7vw;
 	transition: all 0.5s ease;
 }
 
 div#myFile-pane div.actions button#downloadBtn:hover {
 	box-shadow: 0 0 20px var(--primary-color);
+	width: 6.5vw;
+	padding: 1.2vw;
+	font-size: 0.8vw;
+
 }
 
 div#upload {
@@ -535,36 +558,44 @@ div#results-pane-upload div.left-pane-upload div.actions-pane-upload {
 }
 
 div#results-pane-upload div.left-pane-upload button#cancelBtn {
-	margin-right: 10%;
-	padding: 20%;
+	width: 4vw;
+	margin-right: 5%;
+	padding: 1vw;
 	color: var(--primary-color-abs);
 	background-color: red;
 	border: None;
 	border-radius: 10px;
-	font-size: min(1.5vw, 1.5vh);
+	font-size: 0.7vw;
 	transition: all 0.5s ease;
 }
 
 div#results-pane-upload div.left-pane-upload button#cancelBtn:hover {
 	box-shadow: 0 0 20px var(--primary-color);
+	width: 5vw;
+	padding: 1.2vw;
+	font-size: 0.8vw;
 }
 
 
 
 
 div#results-pane-upload div.left-pane-upload button#uploadBtn {
-	margin-right: 10%;
-	padding: 20%;
+	width: 4vw;
+	margin-right: 5%;
+	padding: 1vw;
 	color: var(--primary-color-abs);
 	background-color: var(--secondary-color);
 	border: None;
 	border-radius: 10px;
-	font-size: min(1.5vw, 1.5vh);
+	font-size: 0.7vw;
 	transition: all 0.5s ease;
 }
 
 div#results-pane-upload div.left-pane-upload button#uploadBtn:hover {
 	box-shadow: 0 0 20px var(--primary-color);
+	width: 5vw;
+	padding: 1.2vw;
+	font-size: 0.8vw;
 }
 
 div#results-pane-upload div.right-pane-upload {

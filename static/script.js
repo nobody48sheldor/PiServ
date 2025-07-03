@@ -5,8 +5,6 @@ const ls2 = document.getElementById("ls2");
 const ls2title = document.getElementById("ls2title");
 const viewer = document.getElementById("viewer");
 const downloadBtn = document.getElementById("downloadBtn");
-const toggleDarkLight = document.getElementById("toggleDarkLight");
-const iconTheme = document.getElementById("iconTheme");
 const dropZone = document.getElementById("dropZone");
 const iconDrop = document.getElementById("iconDrop");
 const fileInput = document.getElementById('fileInput');
@@ -15,28 +13,6 @@ const resultsUpload = document.getElementById("results-upload");
 const uploadBtn = document.getElementById("uploadBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 
-const colors = {
-  dark: {
-    '--primary-color-abs': 'white',
-    '--primary-color': '#3D3D59',
-    '--secondary-color': '#4945FF',
-    '--thirdary-color': '#303048',
-    '--text-color': '#C0C0CF',
-    '--background-primary-color': '#181826',
-    '--background-secondary-color': '#212134',
-  },
-  light: {
-    '--primary-color-abs': 'black',
-    '--primary-color': '#d1b48e',
-    '--secondary-color': '#fc8712',
-    '--thirdary-color': '#c7b69f',
-    '--text-color': '#171513',
-    '--background-primary-color': '#e0cebc',
-    '--background-secondary-color': '#e0cbaf',
-  }
-};
-
-let theme = "dark";
 let currentViewedPath = null;
 let upload_file = null;
 let upload_path = null;
@@ -253,7 +229,6 @@ function uploadFile(file) {
 }
 
 
-
 // Handle input events
 input.addEventListener("input", () => {
 	const query = input.value;
@@ -290,17 +265,7 @@ downloadBtn.addEventListener("click", () => {
 });
 
 
-toggleDarkLight.addEventListener("click", () => {
-  iconTheme.classList.toggle("fa-moon");
-  iconTheme.classList.toggle("fa-sun");
 
-  const themeColors = theme === "light" ? colors.dark : colors.light;
-  Object.entries(themeColors).forEach(([varName, value]) => {
-    document.documentElement.style.setProperty(varName, value);
-  });
-
-  theme = theme === "light" ? "dark" : "light";
-});
 
 
 dropZone.addEventListener('click', () => fileInput.click());

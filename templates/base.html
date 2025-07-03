@@ -13,6 +13,10 @@
 				<button id="toggleDarkLight">
 					<i id="iconTheme" class="fa-regular fa-sun"></i>
 				</button>
+				<button id="powerUserMode">
+					<i id="iconMode" class="fa-solid fa-terminal"></i>
+				</button>
+
 			</div>
 			<div class="push-center">
 					<p class="title">PiServ</p>
@@ -24,6 +28,6 @@
 			{% block page %}
 			{% endblock %}
 		</div>
-	<script src="{{ url_for('static', filename='script.js') }}"></script>
+	<script src="{{ url_for('static', filename='homescript.js') }}"></script>
 	</body>
 </html>

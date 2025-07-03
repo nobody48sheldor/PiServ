@@ -36,8 +36,11 @@ list_files_recursive(directory)
 print(len(Files))
 print(len(Folders))
 
+mode = "default"
+
 @app.route("/")
 def home():
+    print("IP : ", request.headers.get('X-Forwarded-For', request.remote_addr), " MODE : ", mode)
     return( render_template("index.html") )
 
 
@@ -166,5 +169,23 @@ def get_abs_path():
     return jsonify({"absolutepath": abs_path})
 
 
+
+@app.route("/mode", methods=['POST'])
+def toggle_mode():
+    global mode
+    mode_change = request.json.get('mode')
+    if mode in ['default', 'powermode']:
+        mode = mode_change
+        return jsonify({'result': 1})
+    else:
+        return jsonify({"error": "bad mode"}), 400
+
+@app.route("/powermode")
+def powermode():
+    return( render_template("powerIndex.html") )
+
+
+
+
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(host='0.0.0.0', debug=True)
