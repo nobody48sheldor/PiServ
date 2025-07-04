@@ -8,6 +8,7 @@ from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
 from werkzeug.utils import secure_filename
 import shutil
+import netifaces
 
 
 load_dotenv("./.flaskenv")
@@ -18,6 +19,17 @@ chars_len = len(directory)+1
 chars_max = len(directory)+1 + 30
 print(os.path.abspath("static/temp/"))
 
+ips = []
+for iface in netifaces.interfaces():
+    addrs = netifaces.ifaddresses(iface)
+    if netifaces.AF_INET in addrs:
+        for addr in addrs[netifaces.AF_INET]:
+            ip = addr['addr']
+            if ip.startswith("192.168."):  # skip loopback
+                ips.append(ip)
+
+HOST_IP = ips[0]
+print("Local IPs:", HOST_IP)
 
 Files=[]
 Folders=[]
@@ -33,8 +45,8 @@ def list_files_recursive(path):
             list_files_recursive(entry.path)
 
 list_files_recursive(directory)
-print(len(Files))
-print(len(Folders))
+print("number of files : ",len(Files))
+print("number of folders : ",len(Folders))
 
 mode = "default"
 
@@ -188,4 +200,4 @@ def powermode():
 
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', debug=True)
+	app.run(host='0.0.0.0',port=5000, debug=True)

@@ -8,33 +8,33 @@
 <div id="top-left-pane">
 	<div class="title-pane">
 		<p class="title-pane-p">
-			Explore
+			Sync to server
 		</p>
 	</div>
-	<div id="explore">
-		{% include"explore.html" %}
+	<div id="syncToServer">
+		{% include"sync_to_server.html" %}
 	</div>
 </div>
 <div id="bottom-left-pane">
 	<div class="title-pane">
 		<p class="title-pane-p">
-			Upload
+			Get archive
 		</p>
 	</div>
-	<div id="upload">
-		{% include"upload.html" %}
+	<div id="getArchive">
+		{% include"get_archive.html" %}
 	</div>
 </div>
 <div id="right-pane">
 	<div class="title-pane">
 		<p class="title-pane-p">
-			My File
+			My Folders
 		</p>
 	</div>
-	<div id="myFiles">
-		{% include"myFile.html" %}
+	<div id="myFolders">
+		{% include"my_folders.html" %}
 	</div>
 
 </div>
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="{{ url_for('static', filename='powerscript.js') }}"></script>
 {% endblock %}

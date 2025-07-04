@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 
-{% block title %}Home Page{% endblock %}
+{% block title %}PiServ-server{% endblock %}
 
 {% block page%}
 <div id="top-left-pane">
@@ -12,6 +12,7 @@
 		</p>
 	</div>
 	<div id="explore">
+		{% include"explore.html" %}
 	</div>
 </div>
 <div id="bottom-left-pane">
@@ -21,6 +22,7 @@
 		</p>
 	</div>
 	<div id="upload">
+		{% include"upload.html" %}
 	</div>
 </div>
 <div id="right-pane">
@@ -30,8 +32,9 @@
 		</p>
 	</div>
 	<div id="myFiles">
+		{% include"myFile.html" %}
 	</div>
 
 </div>
-<script src="{{ url_for('static', filename='powerscript.js') }}"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

@@ -1,0 +1,13 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>{% block title %}PiServ-client{% endblock %}</title>
+	</head>
+	<body>
+		<h1> PiServ - Client </h1>
+	<script src="{{ url_for('static', filename='script.js') }}"></script>
+	</body>
+</html>
