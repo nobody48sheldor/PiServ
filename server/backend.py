@@ -196,7 +196,9 @@ def toggle_mode():
 def powermode():
     return( render_template("powerIndex.html") )
 
-
+@app.route("/ip_client", methods=['POST'])
+def get_client_ip():
+    return jsonify({"ip": request.headers.get('X-Forwarded-For', request.remote_addr)})
 
 
 if __name__ == "__main__":
