@@ -17,7 +17,7 @@ app = Flask(__name__)
 directory="/home/arnaud/Desktop/"
 chars_len = len(directory)+1
 chars_max = len(directory)+1 + 30
-print(os.path.abspath("static/temp/"))
+print(os.path.abspath("./static/temp/"))
 
 ips = []
 for iface in netifaces.interfaces():
@@ -158,10 +158,10 @@ def moveOrDeletFile():
     else:
         if (data["deletFile"] == 1):
             print("here trying to delet file")
-            os.remove(os.path.abspath("static/temp/")+"/"+data["upload_file"])
+            os.remove(os.path.abspath("./static/temp/")+"/"+data["upload_file"])
             return jsonify({'result': 1})
         if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
-            shutil.move(os.path.abspath("static/temp/")+"/"+data["upload_file"], data["upload_path"])
+            shutil.move(os.path.abspath("./static/temp/")+"/"+data["upload_file"], data["upload_path"])
             
             list_files_recursive(directory)
             return jsonify({'result': 1})
@@ -199,6 +199,67 @@ def powermode():
 @app.route("/ip_client", methods=['POST'])
 def get_client_ip():
     return jsonify({"ip": request.headers.get('X-Forwarded-For', request.remote_addr)})
+
+@app.route("/push", methods=['POST'])
+def push():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    paths = data.get('paths')
+    print(paths)
+    return jsonify({'result':1})
+
+@app.route("/pull", methods=['POST'])
+def pull():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    paths = data.get('paths')
+    print(paths)
+    return jsonify({'result':1})
+
+@app.route("/archivesearch")
+def archivesearch():
+    query = request.args.get("q", "").strip()
+    if not query:
+        return jsonify([])
+
+    # Fuzzy match using difflib
+    #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
+    #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
+    matches = [match[0] for match in process.extract(query, Folders, limit=8, score_cutoff=10)]
+    return jsonify(matches)
+
+@app.route("/archive", methods=['POST'])
+def archive():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    path = data.get('path')
+    print(path)
+    name = path.split("/")[-1]
+    
+    print("PYTHON : ", os.path.abspath("./static")+"/archive.sh "+name+" "+path)
+    os.system(os.path.abspath("./static")+"/archive.sh "+name+" "+path)
+    print(os.path.abspath("./static/toArchive")+"/"+name+".zip")
+    print(1)
+    return jsonify({'result':os.path.abspath("./static/toArchive")+"/"+name+".zip"})
+
+@app.route("/download-complete", methods=['POST'])
+def downloadComplete():
+    data = request.get_json()
+    filepath = data.get('filepath')
+    print("TO REMOVE : ",filepath)
+    try:
+        os.remove(filepath)
+        return jsonify({'result':1})
+    except:
+        return jsonify({'result':0})
+
+
+
+
+
 
 
 if __name__ == "__main__":

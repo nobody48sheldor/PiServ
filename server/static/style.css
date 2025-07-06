@@ -816,8 +816,108 @@ button#pullBtn:hover {
 }
 
 
+div#getArchive {
+	transition: all 0.5s ease;
+	width: 90%;
+	margin-left: 5%;
+	height: 78%;
+	display: grid;
+	grid-template-columns: 80% 20%;
+	grid-gap: min(2vw, 2vh);
+}
 
+div#archive-search-pane {
+	grid-area: 1 / 1 / 2 / 2;
+}
 
+div.archive-wrapper {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div#get-archive {
+	margin-top: 10%;
+	grid-area: 1 / 2 / 2 / 3;
+	height: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-left: 2px solid var(--primary-color);
+}
+
+button#archiveBtn {
+	height: 50%;
+	width: 60%;
+	margin: 2vh;
+	padding: 5%;
+	color: var(--primary-color-abs);
+	background-color: var(--secondary-color);
+	border: None;
+	border-radius: 10px;
+	font-size: 0.8vw;
+	transition: all 0.5s ease;
+}
+
+button#archiveBtn:hover {
+	box-shadow: 0 0 20px var(--primary-color);
+	height: 55%;
+	width: 70%;
+	padding: 10%;
+	font-size: 1vw;
+}
+
+div#archive-results {
+	transition: all 0.5s ease;
+	width: 90%;
+	margin-right: 5%;
+	height: 100%;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 22% 22% 22% 22%;
+	font-size: 0.8vh;
+}
+
+#page:has(#top-left-pane:hover) div#archive-results {
+	transition: all 0.5s ease;
+	font-size: 0.5vh;
+	grid-template-rows: 20% 20% 20% 20%;
+}
+
+#page:has(#bottom-left-pane:hover) div#archive-results {
+	transition: all 0.5s ease;
+	font-size: 1.2vh;
+}
+
+div#myFolders {
+	height: 90%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+}
+
+div#myFolderWrap {
+	height: 100%;
+	width: 90%;
+	display: grid;
+	grid-template-rows: 50% 50%;
+	grid-template-columns: 100%;
+}
+
+div#folderArchitecture {
+	grid-area: 1 / 1;
+	width: 100%;
+	height: 100%;
+}
+
+div#serverOverView {
+	grid-area: 2 / 1;
+	width: 100%;
+	height: 100%;
+}
 
 
 /* usefull properties */
@@ -826,12 +926,18 @@ button#pullBtn:hover {
 	color: green;
 }
 
+.toArchive {
+	color: green;
+}
+
+
 .defaultColor {
 	color: var(--text-color);
 }
 
 .hidden {
 	display: None;
+	font-size: 0px;
 	width: 0px;
 	height: 0px;
 }
