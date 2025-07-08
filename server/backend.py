@@ -155,8 +155,9 @@ def upload_file():
         process = subprocess.Popen(['ffmpeg', '-i', os.path.join(path[:-1], filename), '-c:v', 'copy', '-c:a', 'copy', os.path.join(path[:-1], name_filename)])
         process.wait()
         os.remove(os.path.join(path[:-1], filename))
+        return jsonify({'success': True, 'filename': name_filename}), 200
 
-    return jsonify({'success': True, 'filename': name_filename}), 200
+    return jsonify({'success': True, 'filename': filename}), 200
 
 
 
