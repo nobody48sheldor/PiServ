@@ -144,7 +144,7 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
 
     filename = secure_filename(file.filename) # make the filename without weird characters
-    file.save(os.path.join(path, filename))
+    file.save(os.path.join(path[:-1], filename))
     return jsonify({'success': True, 'filename': filename}), 200
 
 
