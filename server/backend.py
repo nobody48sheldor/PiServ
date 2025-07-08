@@ -88,6 +88,9 @@ def ls():
         return jsonify([])
 
     parentDirectory, sep, after = query.rpartition("/")
+    if not (directory in parentDirectory):
+        print("TRYING TO ACCES PARENT OF",directory)
+        return jsonify([query+"/",".."])
     return jsonify([parentDirectory,".."] + os.listdir(parentDirectory) )
 
 @app.route('/viewfile')

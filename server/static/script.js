@@ -105,8 +105,8 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 				container.appendChild(divWrap);
 
 				divWrap.addEventListener("click", async () => {
-					viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
 					if (await isFile(fullPath)) {
+						viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
 						viewer.src = `/viewfile?q=${encodeURIComponent(fullPath)}`;
 						currentViewedPath = fullPath;
 					} else {
