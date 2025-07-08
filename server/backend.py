@@ -16,6 +16,24 @@ app = Flask(__name__)
 
 directory="/home/arnaud/Desktop/"
 
+def reverseQuery(query):
+    ListQuery = []
+    entries = query.split(" ")
+    for entry in entries:
+        for item in entry.split("/"):
+            ListQuery.append(item)
+    query_rev = ""
+    for word in ListQuery[::-1]:
+        query_rev = query_rev + " " + word
+    return(query_rev)
+
+def reversePath(path):
+    path_rev = ""
+    for item in path.split("/")[1:][::-1]:
+        path_rev = path_rev + "/" + item
+    return(path_rev)
+
+
 def absPathOfBackendFile():
     filePath = ""
     absPathOfBacendFileList = os.path.abspath(__file__).split("/")[1:-1]
@@ -51,9 +69,9 @@ def list_files_recursive(path):
     for entry in os.scandir(path):
         if entry.is_file():
             if str(entry).split(".")[-1][:-2] in fileTypes:
-                Files.append(str(entry.path))
+                Files.append(reversePath(str(entry.path)))
         elif entry.is_dir():
-            Folders.append(str(entry.path))
+            Folders.append(reversePath(str(entry.path)))
             list_files_recursive(entry.path)
 
 list_files_recursive(directory)
@@ -77,7 +95,7 @@ def search():
     # Fuzzy match using difflib
     #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
     #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
-    matches = [match[0] for match in process.extract(query, Files, limit=5, score_cutoff=10)]
+    matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Files, limit=5, score_cutoff=10)]
     return jsonify(matches)
 
 @app.route("/ls")
@@ -171,7 +189,7 @@ def search_upload():
     # Fuzzy match using difflib
     #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
     #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
-    matches = [match[0] for match in process.extract(query, Folders, limit=4, score_cutoff=10)]
+    matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Folders, limit=4, score_cutoff=10)]
     return jsonify(matches)
 
 
@@ -252,7 +270,7 @@ def archivesearch():
     # Fuzzy match using difflib
     #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
     #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
-    matches = [match[0] for match in process.extract(query, Folders, limit=8, score_cutoff=10)]
+    matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Folders, limit=8, score_cutoff=10)]
     return jsonify(matches)
 
 @app.route("/archive", methods=['POST'])
