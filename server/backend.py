@@ -15,9 +15,21 @@ load_dotenv("./.flaskenv")
 app = Flask(__name__)
 
 directory="/home/arnaud/Desktop/"
+
+def absPathOfBackendFile():
+    filePath = ""
+    absPathOfBacendFileList = os.path.abspath(__file__).split("/")[1:-1]
+    print(absPathOfBacendFileList)
+    for name in absPathOfBacendFileList:
+        filePath = filePath + "/" + name
+    return(filePath + "/")
+
+filePath = absPathOfBackendFile()
+print("THE PATH OF THE FILE IS : " + filePath)
+
 chars_len = len(directory)+1
 chars_max = len(directory)+1 + 30
-print(os.path.abspath("./static/temp/"))
+print(filePath+"static/temp/")
 
 ips = []
 for iface in netifaces.interfaces():
@@ -94,9 +106,10 @@ def view_pdf():
             lexer = guess_lexer_for_filename(query, code)
         except ClassNotFound:
             lexer = get_lexer_by_name('text')
-        formatter = HtmlFormatter(linenos=True, cssclass="codehilite", style="monokai")
+        formatter = HtmlFormatter(linenos=True, cssclass="codehilite", style="default")
         highlighted_code = highlight(code, lexer, formatter)
         css_style = formatter.get_style_defs('.codehilite')
+        #css_style = formatter.get_style_defs('.default')
         return render_template('show_code.html', code=highlighted_code, css_style=css_style)
 
 
@@ -158,10 +171,10 @@ def moveOrDeletFile():
     else:
         if (data["deletFile"] == 1):
             print("here trying to delet file")
-            os.remove(os.path.abspath("./static/temp/")+"/"+data["upload_file"])
+            os.remove(filePath+"static/temp/"+"/"+data["upload_file"])
             return jsonify({'result': 1})
         if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
-            shutil.move(os.path.abspath("./static/temp/")+"/"+data["upload_file"], data["upload_path"])
+            shutil.move(filePath+"static/temp/"+"/"+data["upload_file"], data["upload_path"])
             
             list_files_recursive(directory)
             return jsonify({'result': 1})
@@ -177,7 +190,7 @@ def get_abs_path():
     if not rel_path:
         return jsonify({"error": "Missing path"}), 400
 
-    abs_path = os.path.abspath(rel_path)
+    abs_path = filePath+rel_path
     return jsonify({"absolutepath": abs_path})
 
 
@@ -239,11 +252,11 @@ def archive():
     print(path)
     name = path.split("/")[-1]
     
-    print("PYTHON : ", os.path.abspath("./static")+"/archive.sh "+name+" "+path)
-    os.system(os.path.abspath("./static")+"/archive.sh "+name+" "+path)
-    print(os.path.abspath("./static/toArchive")+"/"+name+".zip")
+    print("PYTHON : ", filePath+"static"+"/archive.sh "+name+" "+path)
+    os.system(filePath+"static"+"/archive.sh "+name+" "+path)
+    print(filePath+"static/toArchive"+"/"+name+".zip")
     print(1)
-    return jsonify({'result':os.path.abspath("./static/toArchive")+"/"+name+".zip"})
+    return jsonify({'result':filePath+"static/toArchive"+"/"+name+".zip"})
 
 @app.route("/download-complete", methods=['POST'])
 def downloadComplete():
