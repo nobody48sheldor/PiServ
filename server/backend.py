@@ -167,15 +167,15 @@ def search_upload():
 def moveOrDeletFile():
     data = request.get_json()
     if not data:
-            return jsonify({'result': 0})
+        return jsonify({'result': 0})
     else:
         if (data["deletFile"] == 1):
             print("here trying to delet file")
-            os.remove(filePath+"static/temp/"+"/"+data["upload_file"])
+            os.remove(filePath+"static/temp"+"/"+data["upload_file"])
             return jsonify({'result': 1})
         if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
-            shutil.move(filePath+"static/temp/"+"/"+data["upload_file"], data["upload_path"])
-            
+            shutil.move(filePath+"static/temp"+"/"+data["upload_file"], data["upload_path"])
+
             list_files_recursive(directory)
             return jsonify({'result': 1})
         else:
@@ -251,7 +251,7 @@ def archive():
     path = data.get('path')
     print(path)
     name = path.split("/")[-1]
-    
+
     print("PYTHON : ", filePath+"static"+"/archive.sh "+name+" "+path)
     os.system(filePath+"static"+"/archive.sh "+name+" "+path)
     print(filePath+"static/toArchive"+"/"+name+".zip")
@@ -271,9 +271,5 @@ def downloadComplete():
 
 
 
-
-
-
-
 if __name__ == "__main__":
-	app.run(host='0.0.0.0',port=5000, debug=True)
+    app.run(host='0.0.0.0',port=5000, debug=True)
