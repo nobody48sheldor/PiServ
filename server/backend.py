@@ -9,7 +9,7 @@ from pygments.util import ClassNotFound
 from werkzeug.utils import secure_filename
 import shutil
 import netifaces
-
+import subprocess
 
 load_dotenv("./.flaskenv")
 app = Flask(__name__)
@@ -45,7 +45,7 @@ print("Local IPs:", HOST_IP)
 
 Files=[]
 Folders=[]
-fileTypes = ["pdf","txt","png","jpg","jpeg","py","js","cpp","ml","htlm","css","scss","htmx","docx","odt","md","odg","tex","log","cmi","aux","c","cmo","svg","xlsx","sh","h","dat","gif","mp3","webp","mp4","mkv","MOV","webm","json"]
+fileTypes = ["pdf","txt","png","jpg","jpeg","py","js","cpp","ml","htlm","css","scss","htmx","docx","odt","md","odg","tex","log","cmi","aux","c","cmo","svg","xlsx","sh","h","dat","gif","mp3","webp","mp4","mkv","MOV","webm","json","mov"]
 print(fileTypes)
 def list_files_recursive(path):
     for entry in os.scandir(path):
@@ -145,7 +145,15 @@ def upload_file():
 
     filename = secure_filename(file.filename) # make the filename without weird characters
     file.save(os.path.join(path[:-1], filename))
-    return jsonify({'success': True, 'filename': filename}), 200
+    if filename.split(".")[-1] in ["mov","mkv","MOV"]:
+        name_filename=filename.rsplit(".",1)[0]
+        name_filename = name_filename+".mp4"
+        print("NAME_FILENAME :",name_filename)
+        process = subprocess.Popen(['ffmpeg', '-i', os.path.join(path[:-1], filename), '-c:v', 'copy', '-c:a', 'copy', os.path.join(path[:-1], name_filename)])
+        process.wait()
+        os.remove(os.path.join(path[:-1], filename))
+
+    return jsonify({'success': True, 'filename': name_filename}), 200
 
 
 

@@ -17,6 +17,8 @@ let currentViewedPath = null;
 let upload_file = null;
 let upload_path = null;
 let path_temp = null;
+let path_static = null;
+let bongoCat = null;
 
 
 // Helper to check if path is a file
@@ -75,6 +77,18 @@ getAbsolutePathFromBackend("static/temp/")
 	}
 });
 
+getAbsolutePathFromBackend("static/")
+	.then(absPath => {
+	if (absPath) {
+		console.log("Absolute path from server:", absPath);
+		path_static= absPath+"/";
+		bongoCat = path_static+"Bongo-Cat-PNG-HD.gif"
+	} else {
+		console.log("No path returned");
+	}
+});
+
+
 
 
 // Load and display files in a directory
@@ -91,6 +105,7 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 				container.appendChild(divWrap);
 
 				divWrap.addEventListener("click", async () => {
+					viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
 					if (await isFile(fullPath)) {
 						viewer.src = `/viewfile?q=${encodeURIComponent(fullPath)}`;
 						currentViewedPath = fullPath;
@@ -174,6 +189,7 @@ function handleSearchResults(data) {
 		const displayText = item.slice(item.length - 32 - Math.min(25, item.length - 32));
 		const divWrap = createDivElement(displayText);
 		results.appendChild(divWrap);
+		viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
 
 		divWrap.addEventListener("click", () => {
 			viewer.src = `/viewfile?q=${encodeURIComponent(item)}`;
@@ -210,6 +226,7 @@ function uploadFile(file) {
 	formData.append("path", path_temp);
 
 	upload_file = file.name;
+	viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
 
 	fetch('/upload', {
 		method: 'POST',
@@ -218,8 +235,9 @@ function uploadFile(file) {
 		.then(res => res.json())
 		.then(data => {
 			if (data.success) {
-				viewer.src = `/viewfile?q=${encodeURIComponent(path_temp+file.name)}`;
+				viewer.src = `/viewfile?q=${encodeURIComponent(path_temp+data.filename)}`;
 				currentViewedPath = null;
+				upload_file = data.filename;
 				// currentViewedPath = path_temp+file.name;
 			} else {
 				alert("Error: " + data.error);
