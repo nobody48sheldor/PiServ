@@ -189,9 +189,9 @@ function handleSearchResults(data) {
 		const displayText = item.slice(item.length - 32 - Math.min(25, item.length - 32));
 		const divWrap = createDivElement(displayText);
 		results.appendChild(divWrap);
-		viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
 
 		divWrap.addEventListener("click", () => {
+			viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
 			viewer.src = `/viewfile?q=${encodeURIComponent(item)}`;
 			currentViewedPath = item;
 			displayDirectoryContents(ls, item, ls2);
