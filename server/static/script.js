@@ -1,10 +1,14 @@
 const input = document.getElementById("search");
 const results = document.getElementById("results");
+
 const ls = document.getElementById("ls");
 const ls2 = document.getElementById("ls2");
 const ls2title = document.getElementById("ls2title");
+
 const viewer = document.getElementById("viewer");
 const downloadBtn = document.getElementById("downloadBtn");
+const deleteBtn = document.getElementById("deleteBtn");
+
 const dropZone = document.getElementById("dropZone");
 const iconDrop = document.getElementById("iconDrop");
 const fileInput = document.getElementById('fileInput');
@@ -22,6 +26,7 @@ const addFolderls2 = document.getElementById("addFolderls2");
 const dirNamels2 = document.getElementById("dirNamels2");
 const currentDirls2 = document.getElementById("currentDirls2");
 const closeInputFolder2 = document.getElementById("closeInputFolder2");
+const deleteDir2 = document.getElementById("deleteDir2");
 
 let currentViewedPath = null;
 let upload_file = null;
@@ -114,7 +119,6 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 			}
 			if (container === ls2) {
 				currentDirls2.textContent = path;
-				console.log("HERE TEH FUCK MF : ",path);
 			}
 			entries.forEach(name => {
 				const fullPath = `${basePath}/${name}`;
@@ -298,6 +302,27 @@ downloadBtn.addEventListener("click", () => {
 	}
 });
 
+deleteBtn.addEventListener("click", async () => {
+	if (currentViewedPath) {
+		console.log("TRYING TO DELETE", currentViewedPath);
+		const response = await fetch('/deletFileViewing', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ path:currentViewedPath })
+		});
+		const data = await response.json();
+		if (data.result === 0) {
+			alert("File delete failed");
+		} else {
+			alert("File delete success");
+			ls2title.innerHTML = "";
+			displayDirectoryContents(ls, currentViewedPath, ls2);
+			currentViewedPath = null;
+			viewer.src = "";
+		}
+	}
+});
+
 
 
 
@@ -371,7 +396,6 @@ uploadBtn.addEventListener('click', async () => {
 		});
 		const resultResponse = await response.json();
 		if ( resultResponse.result === 1) {
-			console.log( resultResponse.result );
 			alert("Success uploading : " + upload_file + " to " + upload_path);
 		} else { 
 			alert("Error : " + response.error);
@@ -401,7 +425,6 @@ dirNamels.addEventListener("keydown", async () => {
 		full_path = currentDirls.textContent;
 		full_path = full_path.substring(0, full_path.lastIndexOf("/"));
 		new_dir = full_path + "/" + dirNamels.value;
-		console.log("NEW DIR: ", new_dir);
 		const response = await fetch('/newDir', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -429,6 +452,9 @@ closeInputFolder.addEventListener("click", () => {
 		closeInputFolder.classList.add("hidden");
 });
 
+
+
+
 addFolderls2.addEventListener("click", () => {
 	if (currentDirls2.textContent !== "") {
 		dirNamels2.classList.remove("hidden");
@@ -444,7 +470,6 @@ dirNamels2.addEventListener("keydown", async () => {
 		full_path2 = currentDirls2.textContent;
 		full_path2 = full_path2.substring(0, full_path2.lastIndexOf("/"));
 		new_dir2 = full_path2 + "/" + dirNamels2.value;
-		console.log("NEW DIR: ", new_dir2);
 		const response = await fetch('/newDir', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -456,10 +481,11 @@ dirNamels2.addEventListener("keydown", async () => {
 		}
 		dirNamels2.classList.add("hidden");
 		dirNamels2.classList.remove("dirName");
-		displayDirectoryContents(ls2, full_path2+"/");
 		dirNamels2.value = "";
 		addFolderls2.classList.remove("hidden");
 		closeInputFolder2.classList.add("hidden");
+		console.log("HERE WTF");
+		displayDirectoryContents(ls2, full_path2+"/");
 	}
 });
 
@@ -471,4 +497,23 @@ closeInputFolder2.addEventListener("click", () => {
 		closeInputFolder2.classList.add("hidden");
 });
 
-
+deleteDir2.addEventListener("click", async () => {
+	if (currentDirls2.textContent !== "") {
+		full_path2 = currentDirls2.textContent;
+		full_path2 = full_path2.substring(0, full_path2.lastIndexOf("/"));
+		new_dir2 = full_path2 + "/" + dirNamels2.value;
+		const response = await fetch('/deletEmptyDir', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ path:full_path2 })
+		});
+		const data = await response.json();
+		if (data.result === 0) {
+			alert("Directory delete failed");
+		} else {
+			alert("Directory delete success");
+			ls2title.innerHTML = "";
+			displayDirectoryContents(ls, full_path2.substring(0, full_path2.lastIndexOf("/")) + "/", ls2);
+		}
+	}
+});

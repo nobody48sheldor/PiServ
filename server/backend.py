@@ -314,6 +314,34 @@ def newDir():
     else:
         return jsonify({'result':0})
 
+@app.route("/deletEmptyDir", methods=['POST'])
+def deletEmptyDir():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    path = data.get('path')
+    if [folder.path for folder in os.scandir(path)] == []:
+        print("DELET EMPTY DIR :", path)
+        os.rmdir(path)
+        return jsonify({'result':1})
+    else:
+        return jsonify({'result':0})
+
+@app.route("/deletFileViewing", methods=['POST'])
+def deletFileViewing():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    path = data.get('path')
+    print("FILE TO DELETE :", path)
+    try:
+        shutil.move(path, filePath+"static/trash")
+        list_files_recursive(directory)
+        return jsonify({'result':1})
+    except:
+        return jsonify({'result':0})
+
+
 
 
 
