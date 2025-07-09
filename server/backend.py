@@ -342,6 +342,9 @@ def deletFileViewing():
     path = data.get('path')
     print("FILE TO DELETE :", path)
     try:
+        if path.rsplit("/",1)[1] in [entry.path.rsplit("/",1)[1] for entry in os.scandir(filePath+"static/trash")]:
+            print("DELETE FROM TRASH :", filePath+"static/trash/"+path.rsplit("/",1)[1])
+            os.remove(filePath+"static/trash/"+path.rsplit("/",1)[1])
         shutil.move(path, filePath+"static/trash")
         list_files_recursive(directory)
         return jsonify({'result':1})

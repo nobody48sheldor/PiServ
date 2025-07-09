@@ -330,6 +330,7 @@ deleteBtn.addEventListener("click", async () => {
 renameBtn.addEventListener("click", () => {
 	if (currentViewedPath !== null) {
 		renameBtn.classList.add("hidden");
+		newFileName.value = currentViewedPath.substring(currentViewedPath.lastIndexOf("/")+1);
 		newFileName.classList.remove("hidden");
 		closeInputName.classList.remove("hidden");
 	}
@@ -445,6 +446,9 @@ uploadBtn.addEventListener('click', async () => {
 		});
 		const resultResponse = await response.json();
 		if ( resultResponse.result === 1) {
+			inputUpload.innerHTML = "";
+			resultsUpload.innerHTML = "";
+			displayDirectoryContents(ls, currentDirls.textContent, ls2);
 			alert("Success uploading : " + upload_file + " to " + upload_path);
 		} else { 
 			alert("Error : " + response.error);
