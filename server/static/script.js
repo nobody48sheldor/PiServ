@@ -365,7 +365,8 @@ newFileName.addEventListener("keydown", async () => {
 			closeInputName.classList.add("hidden");
 			currentViewedPath = new_file;
 			viewer.src = `/viewfile?q=${encodeURIComponent(currentViewedPath)}`;
-			displayDirectoryContents(ls, currentViewedPath, ls2);
+			displayDirectoryContents(ls, currentViewedPath);
+			ls2.innerHTML = "";
 			input.innerHTML = "";
 			results.innerHTML = "";
 		}
