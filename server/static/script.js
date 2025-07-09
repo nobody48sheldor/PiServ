@@ -8,6 +8,9 @@ const ls2title = document.getElementById("ls2title");
 const viewer = document.getElementById("viewer");
 const downloadBtn = document.getElementById("downloadBtn");
 const deleteBtn = document.getElementById("deleteBtn");
+const renameBtn = document.getElementById("renameBtn");
+const newFileName = document.getElementById("newFileName");
+const closeInputName = document.getElementById("closeInputName");
 
 const dropZone = document.getElementById("dropZone");
 const iconDrop = document.getElementById("iconDrop");
@@ -127,7 +130,7 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 				divWrap.addEventListener("click", async () => {
 					if (await isFile(fullPath)) {
 						viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
-						viewer.src = `/viewfile?q=${encodeURIComponent(fullPath)}`;
+				viewer.src = `/viewfile?q=${encodeURIComponent(fullPath)}`;
 						currentViewedPath = fullPath;
 					} else {
 						if (name === "..") {
@@ -322,6 +325,52 @@ deleteBtn.addEventListener("click", async () => {
 		}
 	}
 });
+
+
+renameBtn.addEventListener("click", () => {
+	if (currentViewedPath !== null) {
+		renameBtn.classList.add("hidden");
+		newFileName.classList.remove("hidden");
+		closeInputName.classList.remove("hidden");
+	}
+});
+
+closeInputName.addEventListener("click", () => {
+	renameBtn.classList.remove("hidden");
+	newFileName.value = "";
+	newFileName.classList.add("hidden");
+	closeInputName.classList.add("hidden");
+});
+
+
+
+newFileName.addEventListener("keydown", async () => {
+	if (event.key === "Enter" && newFileName.value !== "" && currentViewedPath !== "") {
+		full_path = currentViewedPath.substring(0, currentViewedPath.lastIndexOf("/"));
+		new_file = full_path + "/" + newFileName.value;
+		const response = await fetch('/renameFile', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ pathOld:currentViewedPath, pathNew:new_file })
+		});
+		const data = await response.json();
+		if (data.result === 0) {
+			alert("Name changed failed");
+		} else {
+			alert("Name changed from "+ currentViewedPath + " to " + new_file);
+			renameBtn.classList.remove("hidden");
+			newFileName.value = "";
+			newFileName.classList.add("hidden");
+			closeInputName.classList.add("hidden");
+			currentViewedPath = new_file;
+			viewer.src = `/viewfile?q=${encodeURIComponent(currentViewedPath)}`;
+			displayDirectoryContents(ls, currentViewedPath, ls2);
+			input.innerHTML = "";
+			results.innerHTML = "";
+		}
+	}
+});
+
 
 
 

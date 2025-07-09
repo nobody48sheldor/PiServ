@@ -15,6 +15,7 @@ load_dotenv("./.flaskenv")
 app = Flask(__name__)
 
 directory="/home/arnaud/Desktop/"
+#directory="/mnt/usb/PiServ-files"
 
 def reverseQuery(query):
     ListQuery = []
@@ -66,13 +67,19 @@ Folders=[]
 fileTypes = ["pdf","txt","png","jpg","jpeg","py","js","cpp","ml","htlm","css","scss","htmx","docx","odt","md","odg","tex","log","cmi","aux","c","cmo","svg","xlsx","sh","h","dat","gif","mp3","webp","mp4","mkv","MOV","webm","json","mov"]
 print(fileTypes)
 def list_files_recursive(path):
-    for entry in os.scandir(path):
-        if entry.is_file():
-            if str(entry).split(".")[-1][:-2] in fileTypes:
-                Files.append(reversePath(str(entry.path)))
-        elif entry.is_dir():
-            Folders.append(reversePath(str(entry.path)))
-            list_files_recursive(entry.path)
+    global Files
+    global Folders
+    Files = []
+    Folders = []
+    def aux(path):
+        for entry in os.scandir(path):
+            if entry.is_file():
+                if str(entry).split(".")[-1][:-2] in fileTypes:
+                    Files.append(reversePath(str(entry.path)))
+            elif entry.is_dir():
+                Folders.append(reversePath(str(entry.path)))
+                aux(entry.path)
+    aux(path)
 
 list_files_recursive(directory)
 print("number of files : ",len(Files))
@@ -336,6 +343,21 @@ def deletFileViewing():
     print("FILE TO DELETE :", path)
     try:
         shutil.move(path, filePath+"static/trash")
+        list_files_recursive(directory)
+        return jsonify({'result':1})
+    except:
+        return jsonify({'result':0})
+
+@app.route("/renameFile", methods=['POST'])
+def renameFile():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    pathOld = data.get('pathOld')
+    pathNew = data.get('pathNew')
+    print("FILE TO RENAME :", pathOld, "TO", pathNew)
+    try:
+        os.rename(pathOld, pathNew)
         list_files_recursive(directory)
         return jsonify({'result':1})
     except:
