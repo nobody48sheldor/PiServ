@@ -13,6 +13,16 @@ const resultsUpload = document.getElementById("results-upload");
 const uploadBtn = document.getElementById("uploadBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 
+const addFolderls = document.getElementById("addFolderls");
+const dirNamels = document.getElementById("dirNamels");
+const currentDirls = document.getElementById("currentDirls");
+const closeInputFolder = document.getElementById("closeInputFolder");
+
+const addFolderls2 = document.getElementById("addFolderls2");
+const dirNamels2 = document.getElementById("dirNamels2");
+const currentDirls2 = document.getElementById("currentDirls2");
+const closeInputFolder2 = document.getElementById("closeInputFolder2");
+
 let currentViewedPath = null;
 let upload_file = null;
 let upload_path = null;
@@ -99,11 +109,17 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 			container.innerHTML = "";
 			const basePath = data[0];
 			const entries = container === ls2 ? data.slice(2) : data.slice(1);
+			if (container === ls) {
+				currentDirls.textContent = path;
+			}
+			if (container === ls2) {
+				currentDirls2.textContent = path;
+				console.log("HERE TEH FUCK MF : ",path);
+			}
 			entries.forEach(name => {
 				const fullPath = `${basePath}/${name}`;
 				const divWrap = createDivElement(name);
 				container.appendChild(divWrap);
-
 				divWrap.addEventListener("click", async () => {
 					if (await isFile(fullPath)) {
 						viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
@@ -132,8 +148,8 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 			});
 			if (container === ls2) {
 				ls2title.innerHTML = "";
-				ls2title.classList.remove("hidden");
-				ls2title.classList.add("ls2title");
+				/*ls2title.classList.remove("hidden");
+				ls2title.classList.add("ls2title");*/
 				const titleDir = document.createElement("p");
 				titleDir.className = "titleDir";
 				titleDir.textContent = data[0].split("/")[data[0].split("/").length - 1];
@@ -197,8 +213,8 @@ function handleSearchResults(data) {
 			displayDirectoryContents(ls, item, ls2);
 			ls2.innerHTML="";
 			ls2title.innerHTML="";
-			ls2title.classList.add("hidden");
-			ls2title.classList.remove("ls2title");
+			/*ls2title.classList.add("hidden");
+			ls2title.classList.remove("ls2title");*/
 		});
 	});
 }
@@ -254,8 +270,8 @@ input.addEventListener("input", () => {
 		ls.innerHTML = "";
 		ls2.innerHTML = "";
 		ls2title.innerHTML = "";
-		ls2title.classList.add("hidden");
-		ls2title.classList.remove("ls2title");
+		/*ls2title.classList.add("hidden");
+		ls2title.classList.remove("ls2title");*/
 		results.innerHTML = "";
 	} else {
 	fetch(`/search?q=${encodeURIComponent(query)}`)
@@ -369,5 +385,90 @@ uploadBtn.addEventListener('click', async () => {
 });
 
 
+addFolderls.addEventListener("click", () => {
+	if (currentDirls.textContent !== "") {
+		dirNamels.classList.remove("hidden");
+		dirNamels.classList.add("dirName");
+		addFolderls.classList.add("hidden");
+		closeInputFolder.classList.remove("hidden");
+		dirNamels.focus();
+	}
+});
+
+
+dirNamels.addEventListener("keydown", async () => {
+	if (event.key === "Enter" && dirNamels.value !== "") {
+		full_path = currentDirls.textContent;
+		full_path = full_path.substring(0, full_path.lastIndexOf("/"));
+		new_dir = full_path + "/" + dirNamels.value;
+		console.log("NEW DIR: ", new_dir);
+		const response = await fetch('/newDir', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ path:new_dir })
+		});
+		const data = await response.json();
+		if (data.result === 0) {
+			alert("Directory creation failed");
+		}
+		dirNamels.classList.add("hidden");
+		dirNamels.classList.remove("dirName");
+		displayDirectoryContents(ls, full_path+"/", ls2);
+		dirNamels.value = "";
+		addFolderls.classList.remove("hidden");
+		closeInputFolder.classList.add("hidden");
+	}
+});
+
+
+closeInputFolder.addEventListener("click", () => {
+		dirNamels.value = "";
+		dirNamels.classList.remove("dirName");
+		dirNamels.classList.add("hidden");
+		addFolderls.classList.remove("hidden");
+		closeInputFolder.classList.add("hidden");
+});
+
+addFolderls2.addEventListener("click", () => {
+	if (currentDirls2.textContent !== "") {
+		dirNamels2.classList.remove("hidden");
+		dirNamels2.classList.add("dirName");
+		addFolderls2.classList.add("hidden");
+		closeInputFolder2.classList.remove("hidden");
+		dirNamels2.focus();
+	}
+});
+
+dirNamels2.addEventListener("keydown", async () => {
+	if (event.key === "Enter" && dirNamels2.value !== "") {
+		full_path2 = currentDirls2.textContent;
+		full_path2 = full_path2.substring(0, full_path2.lastIndexOf("/"));
+		new_dir2 = full_path2 + "/" + dirNamels2.value;
+		console.log("NEW DIR: ", new_dir2);
+		const response = await fetch('/newDir', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ path:new_dir2 })
+		});
+		const data = await response.json();
+		if (data.result === 0) {
+			alert("Directory creation failed");
+		}
+		dirNamels2.classList.add("hidden");
+		dirNamels2.classList.remove("dirName");
+		displayDirectoryContents(ls2, full_path2+"/");
+		dirNamels2.value = "";
+		addFolderls2.classList.remove("hidden");
+		closeInputFolder2.classList.add("hidden");
+	}
+});
+
+closeInputFolder2.addEventListener("click", () => {
+		dirNamels2.value = "";
+		dirNamels2.classList.remove("dirName");
+		dirNamels2.classList.add("hidden");
+		addFolderls2.classList.remove("hidden");
+		closeInputFolder2.classList.add("hidden");
+});
 
 

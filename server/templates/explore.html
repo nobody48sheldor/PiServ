@@ -10,11 +10,23 @@
 
 	<div id="lsLeft">
 		<div id="ls"></div>
+		<div id="lsActions">
+			<button id="addFolderls"><i class="fa-solid fa-folder-plus"></i></button>
+			<button class="hidden" id="closeInputFolder"><i class="fa-solid fa-xmark"></i></button>
+			<p id="currentDirls" class="hidden"></p>
+			<input class="hidden" type="text" id="dirNamels" placeholder="Directory name"></input>
+		</div>
 	</div>
 	<div id="lsRightWrap">
-		<div id="ls2title" class="hidden"></div>
+		<div id="ls2title" class="ls2title"></div>
 		<div id="lsRight">
 			<div id="ls2"></div>
+			<div id="ls2Actions">
+				<button id="addFolderls2"><i class="fa-solid fa-folder-plus"></i></button>
+				<button class="hidden" id="closeInputFolder2"><i class="fa-solid fa-xmark"></i></button>
+				<p id="currentDirls2" class="hidden"></p>
+				<input class="hidden" type="text" id="dirNamels2" placeholder="Directory name"></input>
+			</div>
 		</div>
 	</div>
 </div>

@@ -325,6 +325,7 @@ div#ls::-webkit-scrollbar {
 }
 
 div#ls {
+	height: 90%;
 	transition: all 0.5s ease;
 	overflow: scroll;
 	display: grid;
@@ -332,6 +333,47 @@ div#ls {
 	font-size: 100%;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+}
+
+div#lsActions {
+	height: 10%;
+	border-radius: 10px;
+	margin-left: 10%;
+	width: 80%;
+	background-color: var(--thirdary-color);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+button#addFolderls {
+	transition: all 0.3s ease;
+	background-color: #00000000;
+	padding: 1% 2% 1% 2%;
+	color: var(--text-color);
+	border: 2px solid var(--text-color);
+	border-radius: 5px;
+	font-size: 100%;
+}
+
+button#addFolderls:hover {
+	font-size: 180%;
+	border: None;
+}
+
+button#closeInputFolder {
+	transition: all 0.3s ease;
+	background-color: #00000000;
+	padding: 1% 2% 1% 2%;
+	color: var(--text-color);
+	border: 2px solid var(--text-color);
+	border-radius: 5px;
+	font-size: 100%;
+}
+
+button#closeInputFolder:hover {
+	font-size: 180%;
+	border: None;
 }
 
 div#ls p {
@@ -377,6 +419,7 @@ div.ls2title {
 
 
 div#ls2 {
+	height: 77.5%;
 	transition: all 0.5s ease;
 	overflow: scroll;
 	display: grid;
@@ -384,6 +427,51 @@ div#ls2 {
 	font-size: 100%;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+}
+
+div#ls2Actions {
+	height: 10%;
+	border-radius: 10px;
+	margin-left: 10%;
+	width: 80%;
+	background-color: var(--thirdary-color);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+button#addFolderls2 {
+	transition: all 0.3s ease;
+	background-color: #00000000;
+	padding: 1% 2% 1% 2%;
+	color: var(--text-color);
+	border: 2px solid var(--text-color);
+	border-radius: 5px;
+	font-size: 100%;
+}
+
+button#addFolderls2:hover {
+	font-size: 180%;
+	border: None;
+}
+
+button#closeInputFolder2 {
+	transition: all 0.3s ease;
+	background-color: #00000000;
+	padding: 1% 2% 1% 2%;
+	color: var(--text-color);
+	border: 2px solid var(--text-color);
+	border-radius: 5px;
+	font-size: 100%;
+}
+
+button#closeInputFolder2:hover {
+	font-size: 180%;
+	border: None;
+}
+
+input.dirName {
+	height: 25%;
 }
 
 div#ls2 p {

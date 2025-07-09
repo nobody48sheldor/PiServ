@@ -299,6 +299,22 @@ def downloadComplete():
     except:
         return jsonify({'result':0})
 
+@app.route("/newDir", methods=['POST'])
+def newDir():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    path = data.get('path')
+    print("scan parent dir : ", [folder.path if folder.is_dir() else None for folder in os.scandir(path.rsplit("/",1)[0])])
+    if not (path in [folder.path if folder.is_dir() else None for folder in os.scandir(path.rsplit("/",1)[0])]):
+        os.mkdir(path)
+        list_files_recursive(directory)
+        print("MAKING NEW DIR :", path)
+        return jsonify({'result':1})
+    else:
+        return jsonify({'result':0})
+
+
 
 
 if __name__ == "__main__":
