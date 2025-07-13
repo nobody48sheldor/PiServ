@@ -130,8 +130,18 @@ function displayDirectoryContents(container, path, targetContainer = null) {
 				divWrap.addEventListener("click", async () => {
 					if (await isFile(fullPath)) {
 						viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
-				viewer.src = `/viewfile?q=${encodeURIComponent(fullPath)}`;
+						viewer.src = `/viewfile?q=${encodeURIComponent(fullPath)}`;
 						currentViewedPath = fullPath;
+						for (const child of ls.children) {
+							child.classList.remove('green');
+						}
+						for (const child of ls2.children) {
+							child.classList.remove('green');
+						}
+						for (const child of results.children) {
+							child.classList.remove('green');
+						}
+						divWrap.classList.add("green");
 					} else {
 						if (name === "..") {
 							if (basePath === "/") {
@@ -222,6 +232,17 @@ function handleSearchResults(data) {
 			ls2title.innerHTML="";
 			/*ls2title.classList.add("hidden");
 			ls2title.classList.remove("ls2title");*/
+			for (const child of ls.children) {
+				child.classList.remove('green');
+			}
+			for (const child of ls2.children) {
+				child.classList.remove('green');
+			}
+			for (const child of results.children) {
+				child.classList.remove('green');
+			}
+			divWrap.classList.add("green");
+
 		});
 	});
 }

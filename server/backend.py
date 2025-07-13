@@ -59,12 +59,12 @@ for iface in netifaces.interfaces():
             if ip.startswith("192.168."):  # skip loopback
                 ips.append(ip)
 
-HOST_IP = ips[0]
-print("Local IPs:", HOST_IP)
+#HOST_IP = ips[0]
+#print("Local IPs:", HOST_IP)
 
 Files=[]
 Folders=[]
-fileTypes = ["pdf","txt","png","jpg","jpeg","py","js","cpp","ml","htlm","css","scss","htmx","docx","odt","md","odg","tex","log","cmi","aux","c","cmo","svg","xlsx","sh","h","dat","gif","mp3","webp","mp4","mkv","MOV","webm","json","mov"]
+fileTypes = ["pdf","txt","png","PNG","jpg","JPG","jpeg","py","js","cpp","ml","htlm","css","scss","htmx","docx","odt","md","odg","tex","log","cmi","aux","c","cmo","svg","xlsx","sh","h","dat","gif","mp3","webp","mp4","mkv","MOV","webm","json","mov"]
 print(fileTypes)
 def list_files_recursive(path):
     global Files
@@ -102,7 +102,7 @@ def search():
     # Fuzzy match using difflib
     #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
     #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
-    matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Files, limit=5, score_cutoff=10)]
+    matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Files, limit=6, score_cutoff=10)]
     return jsonify(matches)
 
 @app.route("/ls")

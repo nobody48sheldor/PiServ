@@ -2,6 +2,11 @@ const toggleDarkLight = document.getElementById("toggleDarkLight");
 const iconTheme = document.getElementById("iconTheme");
 const powerUserMode= document.getElementById("powerUserMode");
 const iconMode = document.getElementById("iconMode");
+const viewDoc = document.getElementById("viewDoc");
+const iconView = document.getElementById("iconView");
+const closeIconView = document.getElementById("closeIconView");
+
+const iframeWrapper = document.getElementById("iframeWrapper");
 
 const colors = {
   dark: {
@@ -120,4 +125,18 @@ powerUserMode.addEventListener("click", async () => {
 		}
 		mode = localStorage.getItem('mode');
 	}
+});
+
+iconView.addEventListener("click", async () => {
+	iframeWrapper.classList.add("overlay");
+	iframeWrapper.classList.remove("iframeWrapper");
+	iconView.classList.add("hidden");
+	closeIconView.classList.remove("hidden");
+});
+
+closeIconView.addEventListener("click", async () => {
+	iframeWrapper.classList.remove("overlay");
+	iframeWrapper.classList.add("iframeWrapper");
+	iconView.classList.remove("hidden");
+	closeIconView.classList.add("hidden");
 });
