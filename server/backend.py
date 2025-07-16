@@ -207,7 +207,6 @@ def moveOrDeletFile():
         return jsonify({'result': 0})
     else:
         if (data["deletFile"] == 1):
-            print("here trying to delet file")
             os.remove(filePath+"static/temp"+"/"+data["upload_file"])
             return jsonify({'result': 1})
         if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
@@ -365,6 +364,25 @@ def renameFile():
         return jsonify({'result':1})
     except:
         return jsonify({'result':0})
+
+@app.route("/emptyTrash", methods=['POST'])
+def emptyTrash():
+    data = request.get_json()
+    if not data:
+        return jsonify({'result':0})
+    deleteTrash = data.get('deleteTrash')
+    print(deleteTrash)
+    if deleteTrash == 1:
+        try:
+            for file in os.scandir(filePath+"static/trash"):
+                os.remove(file.path)
+            return jsonify({'result':1})
+        except:
+            return jsonify({'result':0})
+    else:
+        return jsonify({'result':0})
+
+
 
 
 

@@ -5,6 +5,8 @@ const iconMode = document.getElementById("iconMode");
 const viewDoc = document.getElementById("viewDoc");
 const iconView = document.getElementById("iconView");
 const closeIconView = document.getElementById("closeIconView");
+const trash = document.getElementById("trash");
+const iconTrash = document.getElementById("iconTrash");
 
 const iframeWrapper = document.getElementById("iframeWrapper");
 
@@ -140,3 +142,18 @@ closeIconView.addEventListener("click", async () => {
 	iconView.classList.remove("hidden");
 	closeIconView.classList.add("hidden");
 });
+
+trash.addEventListener("click", async () => {
+	const response = await fetch('/emptyTrash', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ deleteTrash: 1 })
+	})
+	const data = await response.json();
+	if (data.result === 1) {
+		alert(data.result + " : trash is now empty")
+	}
+	return data.result;
+});
+
+
