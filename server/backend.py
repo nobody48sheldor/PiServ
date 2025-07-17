@@ -66,19 +66,24 @@ Files=[]
 Folders=[]
 fileTypes = ["pdf","txt","png","PNG","jpg","JPG","jpeg","py","js","cpp","ml","htlm","css","scss","htmx","docx","odt","md","odg","tex","log","cmi","aux","c","cmo","svg","xlsx","sh","h","dat","gif","mp3","webp","mp4","mkv","MOV","webm","json","mov"]
 print(fileTypes)
+
+def aux(path):
+    global Files
+    global Folders
+    for entry in os.scandir(path):
+        if entry.is_file():
+            if str(entry).split(".")[-1][:-2] in fileTypes:
+                Files.append(reversePath(str(entry.path)))
+        elif entry.is_dir():
+            Folders.append(reversePath(str(entry.path)))
+            aux(entry.path)
+
+
 def list_files_recursive(path):
     global Files
     global Folders
     Files = []
     Folders = []
-    def aux(path):
-        for entry in os.scandir(path):
-            if entry.is_file():
-                if str(entry).split(".")[-1][:-2] in fileTypes:
-                    Files.append(reversePath(str(entry.path)))
-            elif entry.is_dir():
-                Folders.append(reversePath(str(entry.path)))
-                aux(entry.path)
     aux(path)
 
 list_files_recursive(directory)
@@ -95,13 +100,10 @@ def home():
 
 @app.route("/search")
 def search():
+    global Files, Folders
     query = request.args.get("q", "").strip()
     if not query:
         return jsonify([])
-
-    # Fuzzy match using difflib
-    #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
-    #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
     matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Files, limit=6, score_cutoff=10)]
     return jsonify(matches)
 
@@ -163,6 +165,7 @@ def download():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    global Files, Folders
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
@@ -185,29 +188,27 @@ def upload_file():
     return jsonify({'success': True, 'filename': filename}), 200
 
 
-
 @app.route("/search-upload")
 def search_upload():
+    global Files, Folders
     query = request.args.get("q", "").strip()
     print(query)
     if not query:
         return jsonify([])
-
-    # Fuzzy match using difflib
-    #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
-    #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
     matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Folders, limit=4, score_cutoff=10)]
     return jsonify(matches)
 
 
 @app.route('/moveOrDeletFiles', methods=['POST'])
 def moveOrDeletFile():
+    global Files, Folders
     data = request.get_json()
     if not data:
         return jsonify({'result': 0})
     else:
         if (data["deletFile"] == 1):
             os.remove(filePath+"static/temp"+"/"+data["upload_file"])
+            list_files_recursive(directory)
             return jsonify({'result': 1})
         if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
             shutil.move(filePath+"static/temp"+"/"+data["upload_file"], data["upload_path"])
@@ -269,13 +270,11 @@ def pull():
 
 @app.route("/archivesearch")
 def archivesearch():
+    global Files, Folders
     query = request.args.get("q", "").strip()
     if not query:
         return jsonify([])
 
-    # Fuzzy match using difflib
-    #treat_results = lambda s: s[chars_len:] if (len(s) < (chars_max+3)) else "..."+s[-chars_max:]
-    #matches = [treat_results(match[0]) for match in process.extract(query, Files, limit=5, score_cutoff=10)]
     matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Folders, limit=8, score_cutoff=10)]
     return jsonify(matches)
 
@@ -291,25 +290,29 @@ def archive():
     print("PYTHON : ", filePath+"static"+"/archive.sh "+name+" "+path)
     os.system(filePath+"static"+"/archive.sh "+name+" "+path)
     print(filePath+"static/toArchive"+"/"+name+".zip")
-    print(1)
+    print("archive successful")
     return jsonify({'result':filePath+"static/toArchive"+"/"+name+".zip"})
 
 @app.route("/download-complete", methods=['POST'])
 def downloadComplete():
+    global Files, Folders
     data = request.get_json()
     filepath = data.get('filepath')
     print("TO REMOVE : ",filepath)
     try:
         os.remove(filepath)
+        list_files_recursive(directory)
         return jsonify({'result':1})
     except:
         return jsonify({'result':0})
 
 @app.route("/newDir", methods=['POST'])
 def newDir():
+    global Files, Folders
     data = request.get_json()
     if not data:
         return jsonify({'result':0})
+
     path = data.get('path')
     print("scan parent dir : ", [folder.path if folder.is_dir() else None for folder in os.scandir(path.rsplit("/",1)[0])])
     if not (path in [folder.path if folder.is_dir() else None for folder in os.scandir(path.rsplit("/",1)[0])]):
@@ -322,22 +325,27 @@ def newDir():
 
 @app.route("/deletEmptyDir", methods=['POST'])
 def deletEmptyDir():
+    global Files, Folders
     data = request.get_json()
     if not data:
         return jsonify({'result':0})
+
     path = data.get('path')
     if [folder.path for folder in os.scandir(path)] == []:
         print("DELET EMPTY DIR :", path)
         os.rmdir(path)
+        list_files_recursive(directory)
         return jsonify({'result':1})
     else:
         return jsonify({'result':0})
 
 @app.route("/deletFileViewing", methods=['POST'])
 def deletFileViewing():
+    global Files, Folders
     data = request.get_json()
     if not data:
         return jsonify({'result':0})
+
     path = data.get('path')
     print("FILE TO DELETE :", path)
     try:
@@ -352,9 +360,11 @@ def deletFileViewing():
 
 @app.route("/renameFile", methods=['POST'])
 def renameFile():
+    global Files, Folders
     data = request.get_json()
     if not data:
         return jsonify({'result':0})
+
     pathOld = data.get('pathOld')
     pathNew = data.get('pathNew')
     print("FILE TO RENAME :", pathOld, "TO", pathNew)
