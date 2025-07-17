@@ -340,9 +340,10 @@ deleteBtn.addEventListener("click", async () => {
 		} else {
 			alert("File delete success");
 			ls2title.innerHTML = "";
-			input.innerHTML = "";
+			input.value = "";
 			results.innerHTML = "";
-			displayDirectoryContents(ls, currentViewedPath, ls2);
+			displayDirectoryContents(ls, currentDirls.textContent, ls2);
+			displayDirectoryContents(ls2, currentDirls2.textContent, ls2);
 			currentViewedPath = null;
 			viewer.src = "";
 		}
