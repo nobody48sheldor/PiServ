@@ -86,6 +86,7 @@ def list_files_recursive(path):
     print(len(Files), len(Folders))
     aux(path)
     print(len(Files), len(Folders))
+    return(None)
 
 list_files_recursive(directory)
 print("number of files : ",len(Files))
@@ -103,6 +104,9 @@ def home():
 def search():
     global Files, Folders
     query = request.args.get("q", "").strip()
+    print("query :", query)
+    query = query[:-13]
+    print("query :", query)
     if not query:
         return jsonify([])
     matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Files, limit=6, score_cutoff=10)]
@@ -111,7 +115,9 @@ def search():
 @app.route("/ls")
 def ls():
     query = request.args.get("q", "").strip()
-    print("query = ", query)
+    print("query :",query)
+    query = query[:-13]
+    print("query :",query)
     if not query:
         return jsonify([])
 
@@ -193,7 +199,9 @@ def upload_file():
 def search_upload():
     global Files, Folders
     query = request.args.get("q", "").strip()
-    print(query)
+    print("query :",query)
+    query = query[:-13]
+    print("query :",query)
     if not query:
         return jsonify([])
     matches = [reversePath(match[0]) for match in process.extract(reverseQuery(query), Folders, limit=4, score_cutoff=10)]
@@ -210,11 +218,13 @@ def moveOrDeletFile():
         if (data["deletFile"] == 1):
             os.remove(filePath+"static/temp"+"/"+data["upload_file"])
             list_files_recursive(directory)
+            print("JUST UPDATED list_files_recursive")
             return jsonify({'result': 1})
         if (data["deletFile"] == 0) and (data["upload_file"] != "") and (data["upload_path"] != ""):
             shutil.move(filePath+"static/temp"+"/"+data["upload_file"], data["upload_path"])
 
             list_files_recursive(directory)
+            print("JUST UPDATED list_files_recursive")
             return jsonify({'result': 1})
         else:
             return jsonify({'result': 0})
@@ -303,6 +313,7 @@ def downloadComplete():
     try:
         os.remove(filepath)
         list_files_recursive(directory)
+        print("JUST UPDATED list_files_recursive")
         return jsonify({'result':1})
     except:
         return jsonify({'result':0})
@@ -319,6 +330,7 @@ def newDir():
     if not (path in [folder.path if folder.is_dir() else None for folder in os.scandir(path.rsplit("/",1)[0])]):
         os.mkdir(path)
         list_files_recursive(directory)
+        print("JUST UPDATED list_files_recursive")
         print("MAKING NEW DIR :", path)
         return jsonify({'result':1})
     else:
@@ -336,6 +348,7 @@ def deletEmptyDir():
         print("DELET EMPTY DIR :", path)
         os.rmdir(path)
         list_files_recursive(directory)
+        print("JUST UPDATED list_files_recursive")
         return jsonify({'result':1})
     else:
         return jsonify({'result':0})
@@ -355,6 +368,7 @@ def deletFileViewing():
             os.remove(filePath+"static/trash/"+path.rsplit("/",1)[1])
         shutil.move(path, filePath+"static/trash")
         list_files_recursive(directory)
+        print("JUST UPDATED list_files_recursive")
         return jsonify({'result':1})
     except:
         return jsonify({'result':0})
@@ -372,6 +386,7 @@ def renameFile():
     try:
         os.rename(pathOld, pathNew)
         list_files_recursive(directory)
+        print("JUST UPDATED list_files_recursive")
         return jsonify({'result':1})
     except:
         return jsonify({'result':0})

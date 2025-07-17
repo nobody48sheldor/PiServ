@@ -111,7 +111,8 @@ getAbsolutePathFromBackend("static/")
 
 // Load and display files in a directory
 function displayDirectoryContents(container, path, targetContainer = null) {
-	fetch(`/ls?q=${encodeURIComponent(path)}`)
+	const pathDate = path + Date.now().toString();
+	fetch(`/ls?q=${encodeURIComponent(pathDate)}`)
 		.then(res => res.json())
 		.then(data => {
 			container.innerHTML = "";
@@ -295,14 +296,15 @@ function uploadFile(file) {
 input.addEventListener("input", () => {
 	const query = input.value;
 	if (query === "") {
-		ls.innerHTML = "";
+		/*ls.innerHTML = "";
 		ls2.innerHTML = "";
 		ls2title.innerHTML = "";
-		/*ls2title.classList.add("hidden");
+		ls2title.classList.add("hidden");
 		ls2title.classList.remove("ls2title");*/
 		results.innerHTML = "";
 	} else {
-	fetch(`/search?q=${encodeURIComponent(query)}`)
+	const queryDate = query + Date.now().toString();
+	fetch(`/search?q=${encodeURIComponent(queryDate)}`)
 		.then(res => res.json())
 		.then(handleSearchResults);
 	}
@@ -310,7 +312,8 @@ input.addEventListener("input", () => {
 
 inputUpload.addEventListener("input", () => {
 	const query = inputUpload.value;
-	fetch(`/search-upload?q=${encodeURIComponent(query)}`)
+	const queryDate = query + Date.now().toString();
+	fetch(`/search-upload?q=${encodeURIComponent(queryDate)}`)
 		.then(res => res.json())
 		.then(handleSearchResults_upload);
 });
@@ -430,6 +433,8 @@ fileInput.addEventListener('change', () => {
 });
 
 cancelBtn.addEventListener('click', async () => {
+	inputUpload.value = "";
+	resultsUpload.innerHTML = "";
 	for (const child of resultsUpload.children) {
 		child.classList.remove('green');
 	}
@@ -474,7 +479,7 @@ uploadBtn.addEventListener('click', async () => {
 			inputUpload.value = "";
 			resultsUpload.innerHTML = "";
 			displayDirectoryContents(ls, currentDirls.textContent, ls2);
-			displayDirectoryContents(ls2, currentDirls2.textContent);
+			displayDirectoryContents(ls2, currentDirls2.textContent+"/");
 			alert("Success uploading : " + upload_file + " to " + upload_path);
 		} else { 
 			alert("Error : " + response.error);
