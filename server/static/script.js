@@ -470,9 +470,10 @@ uploadBtn.addEventListener('click', async () => {
 		});
 		const resultResponse = await response.json();
 		if ( resultResponse.result === 1) {
-			inputUpload.innerHTML = "";
+			inputUpload.value = "";
 			resultsUpload.innerHTML = "";
 			displayDirectoryContents(ls, currentDirls.textContent, ls2);
+			displayDirectoryContents(ls2, currentDirls2.textContent);
 			alert("Success uploading : " + upload_file + " to " + upload_path);
 		} else { 
 			alert("Error : " + response.error);

@@ -68,8 +68,7 @@ fileTypes = ["pdf","txt","png","PNG","jpg","JPG","jpeg","py","js","cpp","ml","ht
 print(fileTypes)
 
 def aux(path):
-    global Files
-    global Folders
+    global Files, Folders
     for entry in os.scandir(path):
         if entry.is_file():
             if str(entry).split(".")[-1][:-2] in fileTypes:
@@ -84,7 +83,9 @@ def list_files_recursive(path):
     global Folders
     Files = []
     Folders = []
+    print(len(Files), len(Folders))
     aux(path)
+    print(len(Files), len(Folders))
 
 list_files_recursive(directory)
 print("number of files : ",len(Files))
