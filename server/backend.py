@@ -417,11 +417,14 @@ def moveFile():
     else:
         if(data["file"] != "") and (data["path"] != ""):
             print("FILE AND NEW PATH :", data["file"], data["path"])
-            shutil.move(data["file"], data["path"])
-
-            list_files_recursive(directory)
-            print("JUST UPDATED list_files_recursive")
-            return jsonify({'result': 1})
+            try:
+                shutil.move(data["file"], data["path"])
+                list_files_recursive(directory)
+                print("JUST UPDATED list_files_recursive")
+                return jsonify({'result': 1})
+            except:
+                print("shutil failed : ", data["path"])
+                return jsonify({'result': 0})
         else:
             return jsonify({'result': 0})
 

@@ -443,10 +443,13 @@ closeInputMovePath.addEventListener("click", () => {
 	moveFilePath.value = "";
 	moveFilePath.classList.add("hidden");
 	closeInputMovePath.classList.add("hidden");
+	listPaths.innerHTML = "";
+	listPaths.classList.add("hidden");
 });
 
 moveFilePath.addEventListener("keydown", async () => {
 	if (event.key === "Enter" && moveFilePath.value !== "" && currentViewedPath !== "") {
+		move_path = moveFilePath.value;
 		listPaths.classList.add("hidden");
 		const response = await fetch('/moveFile', {
 			method: 'POST',
@@ -460,6 +463,13 @@ moveFilePath.addEventListener("keydown", async () => {
 			displayDirectoryContents(ls2, currentDirls2.textContent+"/");
 			input.value = "";
 			results.innerHTML = "";
+			if (move_path[move_path.length] === "/") {
+				currentViewedPath = move_path+currentViewedPath.substring(currentViewedPath.lastIndexOf("/")+1)
+			} else {
+				currentViewedPath = move_path+currentViewedPath.substring(currentViewedPath.lastIndexOf("/"))
+			}
+			viewer.src = `/viewfile?q=${encodeURIComponent(bongoCat)}`;
+			viewer.src = `/viewfile?q=${encodeURIComponent(currentViewedPath)}`;
 
 		} else { 
 			alert("Error : " + response.error);
