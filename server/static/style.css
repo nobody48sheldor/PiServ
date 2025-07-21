@@ -398,6 +398,10 @@ button#addFolderls {
 	font-size: 100%;
 }
 
+div#page:has(#bottom-left-pane:hover) button#addFolderls {
+	border: 2px solid #00000000;
+}
+
 button#addFolderls:hover {
 	font-size: 180%;
 	border: None;
@@ -505,6 +509,10 @@ button#addFolderls2 {
 	font-size: 100%;
 }
 
+div#page:has(#bottom-left-pane:hover) button#addFolderls2 {
+	border: 2px solid #00000000;
+}
+
 button#addFolderls2:hover {
 	font-size: 180%;
 	border: None;
@@ -536,6 +544,10 @@ button#deleteDir2 {
 	border: 2px solid var(--text-color);
 	border-radius: 5px;
 	font-size: 100%;
+}
+
+div#page:has(#bottom-left-pane:hover) button#deleteDir2 {
+	border: 2px solid #00000000;
 }
 
 button#deleteDir2:hover {
@@ -1349,59 +1361,88 @@ div#serverOverView {
 
 	div#myFile-pane div.actions button#downloadBtn {
 		margin-bottom: 4%;
-		width: 10vw;
-		padding: 1vh 0.5vw 1vh 0.5vw;
-		font-size: 100%;
+		width: 6vw;
+		padding: 0.8vh 0.4vw 0.4vh 0.8vw;
+		font-size: 90%;
 	}
 
 	div#myFile-pane div.actions button#downloadBtn:hover {
 		width: 11vw;
 		padding: 1.2vh 1vw 1.2vh 1vw;
-		font-size: 150%;
+		font-size: 120%;
 	}
 
 	#page:has(#top-left-pane:hover) button#downloadBtn {
-		width: 6vw;
-		font-size: 50%;
+		width: 4vw;
+		font-size: 40%;
+		padding: 0.2vh 0.3vw 0.2vh 0.3vw;
 	}
 
 	div#myFile-pane div.actions button#deleteBtn {
 		margin-bottom: 4%;
 		margin-top: 4%;
-		width: 10vw;
-		padding: 1vh 0.5vw 1vh 0.5vw;
-		font-size: 100%;
+		width: 6vw;
+		padding: 0.8vh 0.4vw 0.4vh 0.8vw;
+		font-size: 90%;
 	}
 
 	div#myFile-pane div.actions button#deleteBtn:hover {
 		width: 11vw;
 		padding: 1.2vh 1vw 1.2vh 1vw;
-		font-size: 2.4vh;
-		font-size: 150%;
+		font-size: 120%;
 	}
 
 	#page:has(#top-left-pane:hover) button#deleteBtn {
-		width: 6vw;
-		font-size: 50%;
+		width: 4vw;
+		font-size: 40%;
+		padding: 0.2vh 0.3vw 0.2vh 0.3vw;
 	}
 	
 	div#myFile-pane div.actions button#renameBtn {
 		margin-top: 4%;
-		width: 10vw;
-		padding: 1vh 0.5vw 1vh 0.5vw;
-		font-size: 100%;
+		width: 6vw;
+		padding: 0.8vh 0.4vw 0.4vh 0.8vw;
+		font-size: 90%;
+		margin-bottom: 4%;
 	}
 
 	div#myFile-pane div.actions button#renameBtn:hover {
 		width: 11vw;
 		padding: 1.2vh 1vw 1.2vh 1vw;
-		font-size: 150%;
+		font-size: 120%;
 	}
 
 	#page:has(#top-left-pane:hover) button#renameBtn {
-		width: 6vw;
-		font-size: 50%;
+		width: 4vw;
+		font-size: 40%;
+		padding: 0.2vh 0.3vw 0.2vh 0.3vw;
 	}
+
+	div#myFile-pane div.actions button#moveBtn {
+		margin-top: 4%;
+		width: 6vw;
+		padding: 0.8vh 0.4vw 0.4vh 0.8vw;
+		font-size: 90%;
+	}
+
+	div#myFile-pane div.actions button#moveBtn:hover {
+		width: 11vw;
+		padding: 1.2vh 1vw 1.2vh 1vw;
+		font-size: 120%;
+	}
+
+	div#listPaths div {
+		font-size: 0.6vh;
+		width: 20vw;
+	}
+
+	#page:has(#top-left-pane:hover) button#moveBtn {
+		width: 4vw;
+		font-size: 40%;
+		padding: 0.2vh 0.3vw 0.2vh 0.3vw;
+	}
+
+
 
 	div#myFile-pane div.actions input#newFileName {
 		text-align: center;
