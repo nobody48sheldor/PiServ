@@ -408,6 +408,23 @@ def emptyTrash():
     else:
         return jsonify({'result':0})
 
+@app.route('/moveFile', methods=['POST'])
+def moveFile():
+    global Files, Folders
+    data = request.get_json()
+    if not data:
+        return jsonify({'result': 0})
+    else:
+        if(data["file"] != "") and (data["path"] != ""):
+            print("FILE AND NEW PATH :", data["file"], data["path"])
+            shutil.move(data["file"], data["path"])
+
+            list_files_recursive(directory)
+            print("JUST UPDATED list_files_recursive")
+            return jsonify({'result': 1})
+        else:
+            return jsonify({'result': 0})
+
 
 
 

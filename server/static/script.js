@@ -11,6 +11,10 @@ const deleteBtn = document.getElementById("deleteBtn");
 const renameBtn = document.getElementById("renameBtn");
 const newFileName = document.getElementById("newFileName");
 const closeInputName = document.getElementById("closeInputName");
+const moveBtn = document.getElementById("moveBtn");
+const closeInputMovePath = document.getElementById("closeInputMovePath");
+const moveFilePath = document.getElementById("moveFilePath");
+const listPaths = document.getElementById("listPaths");
 
 const dropZone = document.getElementById("dropZone");
 const iconDrop = document.getElementById("iconDrop");
@@ -34,6 +38,7 @@ const deleteDir2 = document.getElementById("deleteDir2");
 let currentViewedPath = null;
 let upload_file = null;
 let upload_path = null;
+let move_path = null;
 let path_temp = null;
 let path_static = null;
 let bongoCat = null;
@@ -100,7 +105,7 @@ getAbsolutePathFromBackend("static/")
 	if (absPath) {
 		console.log("Absolute path from server:", absPath);
 		path_static= absPath+"/";
-		bongoCat = path_static+"Bongo-Cat-PNG-HD.gif"
+		bongoCat = absPath+"Bongo-Cat-PNG-HD.gif"
 	} else {
 		console.log("No path returned");
 	}
@@ -264,6 +269,23 @@ function handleSearchResults_upload(data) {
 	});
 }
 
+function handleSearchResults_move(data) {
+	listPaths.innerHTML = "";
+	data.forEach(item => {
+		const displayText = item.slice(item.length - 32 - Math.min(25, item.length - 32));
+		const divWrap = createDivElement(displayText);
+		listPaths.appendChild(divWrap);
+		divWrap.addEventListener("click", () => {
+			move_path = item+"/";
+			moveFilePath.value = move_path;
+			listPaths.innerHTML = "";
+			moveFilePath.focus();
+		});
+	});
+}
+
+
+
 
 function uploadFile(file) {
 	const formData = new FormData();
@@ -399,6 +421,59 @@ newFileName.addEventListener("keydown", async () => {
 		}
 	}
 });
+
+moveBtn.addEventListener("click", () => {
+	if (currentViewedPath !== null) {
+		moveBtn.classList.add("hidden");
+		moveFilePath.value = currentViewedPath.substring(0,currentViewedPath.lastIndexOf("/")+1);
+		moveFilePath.classList.remove("hidden");
+		closeInputMovePath.classList.remove("hidden");
+		listPaths.classList.remove("hidden");
+		moveFilePath.focus();
+		const query = moveFilePath.value;
+		const queryDate = query + Date.now().toString();
+		fetch(`/search-upload?q=${encodeURIComponent(queryDate)}`)
+			.then(res => res.json())
+			.then(handleSearchResults_move);
+	}
+});
+
+closeInputMovePath.addEventListener("click", () => {
+	moveBtn.classList.remove("hidden");
+	moveFilePath.value = "";
+	moveFilePath.classList.add("hidden");
+	closeInputMovePath.classList.add("hidden");
+});
+
+moveFilePath.addEventListener("keydown", async () => {
+	if (event.key === "Enter" && moveFilePath.value !== "" && currentViewedPath !== "") {
+		listPaths.classList.add("hidden");
+		const response = await fetch('/moveFile', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ file : currentViewedPath , path : move_path })
+		});
+		const resultResponse = await response.json();
+		if ( resultResponse.result === 1) {
+			alert("moved : "+currentViewedPath+" to "+move_path);
+			displayDirectoryContents(ls, currentDirls.textContent, ls2);
+			displayDirectoryContents(ls2, currentDirls2.textContent+"/");
+			input.value = "";
+			results.innerHTML = "";
+
+		} else { 
+			alert("Error : " + response.error);
+		}
+
+	} else {
+		const query = moveFilePath.value;
+		const queryDate = query + Date.now().toString();
+		fetch(`/search-upload?q=${encodeURIComponent(queryDate)}`)
+			.then(res => res.json())
+			.then(handleSearchResults_move);
+	}
+});
+
 
 
 
